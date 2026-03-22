@@ -8,10 +8,20 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/auth", require("./routes/auth"));
-app.use("/users", require("./routes/users"));
-app.use("/slots", require("./routes/slots"));
-app.use("/bookings", require("./routes/bookings"));
+const authRoutes = require("./routes/auth");
+const userRoutes = require("./routes/users");
+const slotRoutes = require("./routes/slots");
+const bookingRoutes = require("./routes/bookings");
+
+app.use("/auth", authRoutes);
+app.use("/users", userRoutes);
+app.use("/slots", slotRoutes);
+app.use("/bookings", bookingRoutes);
+
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/slots", slotRoutes);
+app.use("/api/bookings", bookingRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend Running ✅");
