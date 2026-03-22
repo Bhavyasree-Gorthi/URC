@@ -48,6 +48,23 @@ const normalizeBooking = (b: any) => ({
   status: String(b.status || "").toLowerCase(),
 });
 
+function getTokenRole() {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return null;
+
+    const [, payload] = token.split(".");
+    if (!payload) return null;
+
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const padded = normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=");
+    const decoded = JSON.parse(atob(padded));
+    return String(decoded?.role || "").toUpperCase() || null;
+  } catch {
+    return null;
+  }
+}
+
 const NOTICE_STORAGE_KEY = "urc_notice_board";
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -1387,6 +1404,8 @@ export default function App() {
     }
 
     // Fetch bookings — requires valid auth token
+    if (!localStorage.getItem("token")) return;
+
     try {
       const bRes = await API.get("/bookings");
       setBookings(bRes.data.data.map(normalizeBooking));
@@ -1399,14 +1418,13 @@ export default function App() {
     }
 
     // Fetch users — only needed for admin; gracefully ignore 403 for regular users
+    if (getTokenRole() !== "ADMIN") return;
+
     try {
       const uRes = await API.get("/users");
       setUsers(uRes.data.data);
     } catch (err: any) {
-      if (err?.response?.status !== 403) {
-        console.error("Users fetch error", err?.response?.status);
-      }
-      // 403 for non-admin is expected and safe to ignore
+      console.error("Users fetch error", err?.response?.status);
     }
   };
 
