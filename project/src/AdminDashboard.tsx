@@ -89,28 +89,31 @@ export default function AdminDashboard() {
   const fp = tc ? Math.round((tb2 / tc) * 100) : 0;
   const activeBookings = bookings.filter((b: any) => b.status === "active");
 
-  const addNotice = () => {
+  const addNotice = async () => {
     const message = newNotice.trim();
     if (!message) {
       showToast("Enter a notice message", "error");
       return;
     }
 
-    updateNotices((prev: any[]) => [
-      {
-        id: `notice_${Date.now()}`,
-        message,
-        createdAt: new Date().toISOString(),
-      },
-      ...prev,
-    ]);
-    setNewNotice("");
-    showToast("Notice posted", "success");
+    try {
+      const res = await API.post("/notices", { message });
+      updateNotices((prev: any[]) => [res.data.data, ...prev]);
+      setNewNotice("");
+      showToast("Notice posted", "success");
+    } catch (err: any) {
+      showToast(err?.response?.data?.message || "Failed to post notice", "error");
+    }
   };
 
-  const removeNotice = (id: string) => {
-    updateNotices((prev: any[]) => prev.filter((notice: any) => notice.id !== id));
-    showToast("Notice removed", "warning");
+  const removeNotice = async (id: string) => {
+    try {
+      await API.delete(`/notices/${id}`);
+      updateNotices((prev: any[]) => prev.filter((notice: any) => notice.id !== id));
+      showToast("Notice removed", "warning");
+    } catch (err: any) {
+      showToast(err?.response?.data?.message || "Failed to remove notice", "error");
+    }
   };
 
   return (

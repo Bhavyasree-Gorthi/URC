@@ -30,16 +30,19 @@ const authRoutes = require("./routes/auth");
 const userRoutes = require("./routes/users");
 const slotRoutes = require("./routes/slots");
 const bookingRoutes = require("./routes/bookings");
+const noticeRoutes = require("./routes/notices");
 
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes);
 app.use("/slots", slotRoutes);
 app.use("/bookings", bookingRoutes);
+app.use("/notices", noticeRoutes);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/slots", slotRoutes);
 app.use("/api/bookings", bookingRoutes);
+app.use("/api/notices", noticeRoutes);
 
 app.get("/", (req, res) => {
   res.send("Backend Running ✅");

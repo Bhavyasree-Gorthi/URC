@@ -65,7 +65,6 @@ function getTokenRole() {
   }
 }
 
-const NOTICE_STORAGE_KEY = "urc_notice_board";
 // ─────────────────────────────────────────────────────────────────────────────
 
 const LANGS = [
@@ -288,6 +287,7 @@ function LangBar({ lang, setLang, dark, compact = false }: any) {
 // ── Sidebars ─────────────────────────────────────────────────────────────────
 function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang, mobile = false, open = true, onClose = () => {} }: any) {
   const t = (T as any)[lang];
+  const isMobile = typeof window !== "undefined" ? window.innerWidth < 640 : false;
   const items = [
     { id: "dashboard", label: t.dashboard, icon: "⊞" },
     { id: "book", label: t.bookSlot, icon: "📅" },
@@ -562,9 +562,11 @@ function HomePage({ onGoAuth, lang, setLang }: any) {
   const t = (T as any)[lang];
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'DM Sans',sans-serif", background: "#f5f6f7" }}>
-      <div style={{ background: "#1F3D2B", color: "#fff", padding: "9px 24px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
+      <div style={{ background: "#1F3D2B", color: "#fff", padding: isMobile ? "9px 14px" : "9px 24px", display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: isMobile ? "flex-start" : "space-between", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 8 }}>
         <span style={{ fontSize: 12, color: "rgba(255,255,255,0.65)" }}>📞 Contact OIC for Liquor Drawl with Leave Certificate</span>
-        <LangBar lang={lang} setLang={setLang} dark={true} />
+        <div style={{ alignSelf: "flex-start" }}>
+          <LangBar lang={lang} setLang={setLang} dark={true} />
+        </div>
       </div>
       <div style={{ background: "linear-gradient(160deg,#0d2016 0%,#1F3D2B 55%,#2d5a3d 100%)", color: "#fff", padding: "64px 20px 90px", textAlign: "center", position: "relative" }}>
         <div style={{ position: "absolute", top: -60, left: -60, width: 220, height: 220, borderRadius: "50%", background: "rgba(201,168,76,0.05)" }} />
@@ -1397,20 +1399,6 @@ export default function App() {
     const resetToken = new URLSearchParams(window.location.search).get("resetToken");
     if (resetToken) setScreen("auth-user");
   }, []);
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem(NOTICE_STORAGE_KEY);
-      if (!stored) return;
-      const parsed = JSON.parse(stored);
-      setNotices(Array.isArray(parsed) ? parsed : []);
-    } catch {
-      setNotices([]);
-    }
-  }, []);
-  useEffect(() => {
-    localStorage.setItem(NOTICE_STORAGE_KEY, JSON.stringify(notices));
-  }, [notices]);
-
   const fetchData = async () => {
     // Fetch slots independently — available to all users without auth
     try {
@@ -1421,6 +1409,13 @@ export default function App() {
     }
 
     // Fetch bookings — requires valid auth token
+    try {
+      const nRes = await API.get("/notices");
+      setNotices(nRes.data.data);
+    } catch (err: any) {
+      console.error("Notices fetch error", err?.response?.status, err?.message);
+    }
+
     if (!localStorage.getItem("token")) return;
 
     try {

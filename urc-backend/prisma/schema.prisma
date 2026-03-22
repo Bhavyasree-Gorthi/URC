@@ -51,6 +51,16 @@ model Slot {
   @@map("slots")
 }
 
+model Notice {
+  id        String   @id @db.VarChar(30)
+  message   String
+  createdAt DateTime @default(now()) @db.Timestamp(6)
+  updatedAt DateTime @default(now()) @updatedAt @db.Timestamp(6)
+
+  @@index([createdAt], map: "idx_notices_createdat")
+  @@map("notices")
+}
+
 model Booking {
   id           String        @id @db.VarChar(30)
   tokenNo      String        @unique @db.VarChar(20)
