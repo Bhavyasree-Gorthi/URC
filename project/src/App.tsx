@@ -287,7 +287,6 @@ function LangBar({ lang, setLang, dark, compact = false }: any) {
 // ── Sidebars ─────────────────────────────────────────────────────────────────
 function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang, mobile = false, open = true, onClose = () => {} }: any) {
   const t = (T as any)[lang];
-  const isMobile = typeof window !== "undefined" ? window.innerWidth < 640 : false;
   const items = [
     { id: "dashboard", label: t.dashboard, icon: "⊞" },
     { id: "book", label: t.bookSlot, icon: "📅" },
@@ -560,6 +559,7 @@ function AdminSidebar({ active, onNav, user, onLogout, dark, mobile = false, ope
 // ── Home page ─────────────────────────────────────────────────────────────────
 function HomePage({ onGoAuth, lang, setLang }: any) {
   const t = (T as any)[lang];
+  const isMobile = typeof window !== "undefined" ? window.innerWidth < 640 : false;
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'DM Sans',sans-serif", background: "#f5f6f7" }}>
       <div style={{ background: "#1F3D2B", color: "#fff", padding: isMobile ? "9px 14px" : "9px 24px", display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: isMobile ? "flex-start" : "space-between", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 8 }}>
