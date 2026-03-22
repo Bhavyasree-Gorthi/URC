@@ -286,7 +286,7 @@ function LangBar({ lang, setLang, dark, compact = false }: any) {
 }
 
 // ── Sidebars ─────────────────────────────────────────────────────────────────
-function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang }: any) {
+function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang, mobile = false, open = true, onClose = () => {} }: any) {
   const t = (T as any)[lang];
   const items = [
     { id: "dashboard", label: t.dashboard, icon: "⊞" },
@@ -298,7 +298,7 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang }: any
     <div
       style={{
         width: 230,
-        minHeight: "100vh",
+        minHeight: mobile ? "100dvh" : "100vh",
         background: dark ? "#0d1a12" : "#1F3D2B",
         display: "flex",
         flexDirection: "column",
@@ -306,8 +306,11 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang }: any
         left: 0,
         top: 0,
         bottom: 0,
-        zIndex: 100,
+        zIndex: 210,
         overflowY: "auto",
+        transform: mobile ? (open ? "translateX(0)" : "translateX(-100%)") : "translateX(0)",
+        transition: "transform 0.25s ease",
+        boxShadow: mobile ? "0 20px 50px rgba(0,0,0,0.28)" : "none",
       }}
     >
       <div
@@ -332,7 +335,7 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang }: any
         {items.map((item) => (
           <button
             key={item.id}
-            onClick={() => onNav(item.id)}
+            onClick={() => { onNav(item.id); if (mobile) onClose(); }}
             style={{
               display: "flex",
               alignItems: "center",
@@ -394,7 +397,7 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang }: any
           </div>
         </div>
         <button
-          onClick={onLogout}
+          onClick={() => { onLogout(); if (mobile) onClose(); }}
           style={{
             width: "100%",
             padding: "9px",
@@ -414,7 +417,7 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang }: any
   );
 }
 
-function AdminSidebar({ active, onNav, user, onLogout, dark }: any) {
+function AdminSidebar({ active, onNav, user, onLogout, dark, mobile = false, open = true, onClose = () => {} }: any) {
   // Only Slot Manager and User Manager (no All Bookings link)
   const items = [
     { id: "admin-dashboard", label: "Overview", icon: "📊" },
@@ -425,7 +428,7 @@ function AdminSidebar({ active, onNav, user, onLogout, dark }: any) {
     <div
       style={{
         width: 230,
-        minHeight: "100vh",
+        minHeight: mobile ? "100dvh" : "100vh",
         background: dark ? "#1a0a00" : "#2c1000",
         display: "flex",
         flexDirection: "column",
@@ -433,8 +436,11 @@ function AdminSidebar({ active, onNav, user, onLogout, dark }: any) {
         left: 0,
         top: 0,
         bottom: 0,
-        zIndex: 100,
+        zIndex: 210,
         overflowY: "auto",
+        transform: mobile ? (open ? "translateX(0)" : "translateX(-100%)") : "translateX(0)",
+        transition: "transform 0.25s ease",
+        boxShadow: mobile ? "0 20px 50px rgba(0,0,0,0.28)" : "none",
       }}
     >
       <div
@@ -479,7 +485,7 @@ function AdminSidebar({ active, onNav, user, onLogout, dark }: any) {
         {items.map((item) => (
           <button
             key={item.id}
-            onClick={() => onNav(item.id)}
+            onClick={() => { onNav(item.id); if (mobile) onClose(); }}
             style={{
               display: "flex",
               alignItems: "center",
@@ -530,7 +536,7 @@ function AdminSidebar({ active, onNav, user, onLogout, dark }: any) {
           </div>
         </div>
         <button
-          onClick={onLogout}
+          onClick={() => { onLogout(); if (mobile) onClose(); }}
           style={{
             width: "100%",
             padding: "9px",
@@ -1374,8 +1380,19 @@ export default function App() {
   const [toasts, setToasts] = useState<any>([]);
   const [dark, setDark] = useState(false);
   const [lang, setLang] = useState("en");
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth < 900 : false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => { fetchData(); }, []);
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 900);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+  useEffect(() => {
+    if (!isMobile) setSidebarOpen(false);
+  }, [isMobile]);
   useEffect(() => {
     const resetToken = new URLSearchParams(window.location.search).get("resetToken");
     if (resetToken) setScreen("auth-user");
@@ -1496,15 +1513,26 @@ export default function App() {
         } as any}
       >
         {adminFlag
-          ? <AdminSidebar active={page} onNav={setPage} user={currentUser} onLogout={() => { setCurrentUser(null); setScreen("home"); }} dark={dark} />
-          : <UserSidebar active={page} onNav={setPage} user={currentUser} onLogout={() => { setCurrentUser(null); setScreen("home"); }} dark={dark} lang={lang} setLang={setLang} />
+          ? <AdminSidebar active={page} onNav={setPage} user={currentUser} onLogout={() => { setCurrentUser(null); setScreen("home"); }} dark={dark} mobile={isMobile} open={!isMobile || sidebarOpen} onClose={() => setSidebarOpen(false)} />
+          : <UserSidebar active={page} onNav={setPage} user={currentUser} onLogout={() => { setCurrentUser(null); setScreen("home"); }} dark={dark} lang={lang} setLang={setLang} mobile={isMobile} open={!isMobile || sidebarOpen} onClose={() => setSidebarOpen(false)} />
         }
+        {isMobile && sidebarOpen && (
+          <div
+            onClick={() => setSidebarOpen(false)}
+            style={{
+              position: "fixed",
+              inset: 0,
+              background: "rgba(15,23,42,0.42)",
+              zIndex: 180,
+            }}
+          />
+        )}
         <main
           style={{
-            marginLeft: 230,
+            marginLeft: isMobile ? 0 : 230,
             flex: 1,
-            padding: "32px 32px 60px",
-            maxWidth: "calc(100vw - 230px)",
+            padding: isMobile ? "18px 14px 36px" : "32px 32px 60px",
+            maxWidth: isMobile ? "100vw" : "calc(100vw - 230px)",
             overflowX: "hidden",
             "--bg": vars.bg,
             "--card": vars.card,
@@ -1514,7 +1542,12 @@ export default function App() {
             "--shadow": vars.shadow,
           } as any}
         >
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: 20, gap: 8, alignItems: "center" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20, gap: 8, alignItems: "center", flexWrap: "wrap" }}>
+            {isMobile ? (
+              <button onClick={() => setSidebarOpen(true)} style={{ background: vars.card, border: `2px solid ${vars.border}`, borderRadius: 17, padding: "8px 14px", cursor: "pointer", fontSize: 13, color: vars.text, fontFamily: "'DM Sans',sans-serif", boxShadow: vars.shadow, fontWeight: 700 }}>
+                Menu
+              </button>
+            ) : <div />}
             <button onClick={() => setDark((d: any) => !d)} style={{ background: vars.card, border: `2px solid ${vars.border}`, borderRadius: 17, padding: "7px 14px", cursor: "pointer", fontSize: 12, color: vars.text, fontFamily: "'DM Sans',sans-serif", boxShadow: vars.shadow }}>
               {dark ? "☀️ Light" : "🌙 Dark"}
             </button>

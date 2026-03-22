@@ -172,7 +172,7 @@ export default function AdminDashboard() {
             placeholder="Post an announcement for users"
             style={{
               flex: 1,
-              minWidth: 260,
+              minWidth: 0,
               padding: "12px 14px",
               border: "2px solid var(--border)",
               borderRadius: 12,
@@ -745,7 +745,7 @@ export function AdminSlots() {
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            minWidth: 580,
+            minWidth: 520,
           }}
         >
           <thead>
@@ -1438,7 +1438,7 @@ export function AdminUsers() {
           style={{
             width: "100%",
             borderCollapse: "collapse",
-            minWidth: 560,
+            minWidth: 520,
           }}
         >
           <thead>
