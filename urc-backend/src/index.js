@@ -11,28 +11,14 @@ const allowedOrigins = [
   "http://localhost:3000",
 ].filter(Boolean);
 
-app.use(
-  cors({
-    origin: function (origin, callback) {
-      if (!origin) return callback(null, true);
-
-      // Allow exact matches
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      // ✅ Allow ALL Vercel deployments
-      if (origin.includes("vercel.app")) {
-        return callback(null, true);
-      }
-
-      return callback(new Error(`CORS blocked for origin: ${origin}`));
-    },
-    methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Content-Type", "Authorization"],
-    credentials: true,
-  })
-);
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error(`CORS blocked for origin: ${origin}`));
+  }
+}));
 app.use(express.json());
 
 const authRoutes = require("./routes/auth");
