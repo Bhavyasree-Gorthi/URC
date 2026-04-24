@@ -1,0 +1,31 @@
+{
+  "name": "URC NCC Canteen",
+  "short_name": "URC NCC",
+  "description": "Book URC NCC canteen slots quickly from your phone.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#f5f6f7",
+  "theme_color": "#1f3d2b",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/pwa-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/pwa-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/image.png",
+      "sizes": "170x148",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

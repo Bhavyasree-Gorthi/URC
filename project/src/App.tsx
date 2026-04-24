@@ -15,15 +15,20 @@ import { Ctx, useApp } from "./context";
 
 // ── Separate dashboard files ──────────────────────────────────────────────────
 import UserDashboard from "./UserDashboard";
-import AdminDashboard, { AdminSlots, AdminUsers } from "./AdminDashboard";
+import AdminDashboard, { AdminSlots, AdminTokens, AdminUsers } from "./AdminDashboard";
 // ─────────────────────────────────────────────────────────────────────────────
+
+type BeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: "accepted" | "dismissed"; platform: string }>;
+};
 
 // ── Translations ──────────────────────────────────────────────────────────────
 const T = {
-  en: { welcome:"WELCOME TO",unit:"4213 URC NCC GROUP, KURNOOL",tagline:"Book Your E-Slots Here",motto:"Unity and Discipline",nonMemberNote:"Non-Members are only allowed to book Grocery.",servingNote:"All Serving Personnel are requested to contact OIC/Canteen manager for drawl of liquor with Leave Certificate.",grocery:"GROCERY",liquor:"LIQUOR",both:"BOTH",myBookings:"MY BOOKINGS / CANCEL",downloadApp:"DOWNLOAD APP",myProfile:"MY PROFILE",liquorNote:"Note: Only URC NCC Group registered customers can book Liquor",aboutUs:"ABOUT US",aboutText:"Chairman, and all Staff members of URC GP HQ are constantly striving hard to provide utmost satisfaction to Veterans, War Widows, and Serving Pers by ensuring all variety of brands are made available be it Grocery or Liquor items. Our singular aim is to provide utmost satisfaction to our esteemed customers.",signIn:"Sign In",register:"Register",forgotPwd:"Forgot Password",email:"Email Address",password:"Password",name:"Your Name",choosePwd:"Choose a Password",rememberMe:"Remember Me",login:"Log In",bookSlot:"Book Slot",dashboard:"Dashboard",cancel:"Cancel",viewToken:"View Token",confirmBooking:"Confirm Booking",selectCategory:"Category",selectDate:"Select Date",selectTime:"Select Time",spotsLeft:"spots left",full:"Full",holiday:"Holiday",active:"Active",completed:"Completed",cancelled:"Cancelled",bookingSuccess:"Booking confirmed! 🎉",cancelSuccess:"Booking cancelled",onePerDay:"You already have a booking on this date!",adminLogin:"Admin Login",userLogin:"User Login",allBookings:"All Bookings",slotManager:"Slot Manager",userManager:"User Manager",overview:"Overview" },
-  hi: { welcome:"स्वागत है",unit:"4213 यूआरसी एनसीसी ग्रुप, कुर्नूल",tagline:"यहाँ अपना ई-स्लॉट बुक करें",motto:"एकता और अनुशासन",nonMemberNote:"गैर-सदस्य केवल ग्रोसरी बुक कर सकते हैं।",servingNote:"सेवारत कर्मियों से अनुरोध है कि लिकर निकासी के लिए OIC/कैंटीन प्रबंधक से संपर्क करें।",grocery:"किराना",liquor:"शराब",both:"दोनों",myBookings:"मेरी बुकिंग / रद्द",downloadApp:"ऐप डाउनलोड",myProfile:"मेरी प्रोफ़ाइल",liquorNote:"नोट: केवल यूआरसी एनसीसी के पंजीकृत ग्राहक शराब बुक कर सकते हैं",aboutUs:"हमारे बारे में",aboutText:"अध्यक्ष और यूआरसी जीपी मुख्यालय के सभी कर्मचारी वीरों, युद्ध विधवाओं और सेवारत कर्मियों को किराना और शराब दोनों प्रकार की सभी ब्रांड उपलब्ध कराकर अधिकतम संतुष्टि प्रदान करने का प्रयास करते हैं।",signIn:"साइन इन",register:"पंजीकरण",forgotPwd:"पासवर्ड भूल गए",email:"ईमेल पता",password:"पासवर्ड",name:"आपका नाम",choosePwd:"पासवर्ड चुनें",rememberMe:"मुझे याद रखें",login:"लॉग इन",bookSlot:"स्लॉट बुक करें",dashboard:"डैशबोर्ड",cancel:"रद्द करें",viewToken:"टोकन देखें",confirmBooking:"बुकिंग की पुष्टि",selectCategory:"श्रेणी",selectDate:"तारीख चुनें",selectTime:"समय चुनें",spotsLeft:"स्थान शेष",full:"भरा",holiday:"छुट्टी",active:"सक्रिय",completed:"पूर्ण",cancelled:"रद्द",bookingSuccess:"बुकिंग सफल! 🎉",cancelSuccess:"बुकिंग रद्द हुई",onePerDay:"इस तारीख पर पहले से बुकिंग है!",adminLogin:"एडमिन लॉगिन",userLogin:"यूजर लॉगिन",allBookings:"सभी बुकिंग",slotManager:"स्लॉट प्रबंधक",userManager:"यूजर प्रबंधक",overview:"अवलोकन" },
-  te: { welcome:"స్వాగతం",unit:"4213 యూఆర్‌సీ ఎన్‌సీసీ గ్రూప్, కర్నూల్",tagline:"ఇక్కడ మీ ఇ-స్లాట్ బుక్ చేయండి",motto:"ఐక్యత మరియు క్రమశిక్షణ",nonMemberNote:"సభ్యులు కాని వారు కేవలం కిరాణా బుక్ చేయవచ్చు.",servingNote:"సేవలో ఉన్న సిబ్బంది మద్యం కోసం OIC/కాంటీన్ మేనేజర్‌ని సంప్రదించాలి.",grocery:"కిరాణా",liquor:"మద్యం",both:"రెండూ",myBookings:"నా బుకింగ్‌లు / రద్దు",downloadApp:"యాప్ డౌన్‌లోడ్",myProfile:"నా ప్రొఫైల్",liquorNote:"గమనిక: ఎన్‌సీసీ నమోదిత సభ్యులు మాత్రమే మద్యం బుక్ చేయవచ్చు",aboutUs:"మా గురించి",aboutText:"చైర్మన్ మరియు యూఆర్‌సీ జీపీ హెడ్‌క్వార్టర్స్ సిబ్బంది వెటరన్లు, యుద్ధ వితంతువులు మరియు సేవలో ఉన్న సిబ్బందికి అన్ని బ్రాండ్లు అందుబాటులో ఉంచి గరిష్ట సంతృప్తి కలిగించడానికి నిరంతరం కృషి చేస్తున్నారు.",signIn:"సైన్ ఇన్",register:"నమోదు",forgotPwd:"పాస్‌వర్డ్ మర్చిపోయారా",email:"ఇమెయిల్",password:"పాస్‌వర్డ్",name:"మీ పేరు",choosePwd:"పాస్‌వర్డ్ ఎంచుకోండి",rememberMe:"నన్ను గుర్తుంచుకో",login:"లాగిన్",bookSlot:"స్లాట్ బుక్",dashboard:"డ్యాష్‌బోర్డ్",cancel:"రద్దు",viewToken:"టోకెన్ చూడు",confirmBooking:"బుకింగ్ నిర్ధారించు",selectCategory:"వర్గం",selectDate:"తేదీ ఎంచుకోండి",selectTime:"సమయం ఎంచుకోండి",spotsLeft:"స్థానాలు",full:"నిండింది",holiday:"సెలవు",active:"సక్రియం",completed:"పూర్తి",cancelled:"రద్దు",bookingSuccess:"బుకింగ్ నిర్ధారించబడింది! 🎉",cancelSuccess:"బుకింగ్ రద్దు చేయబడింది",onePerDay:"ఈ తేదీకి బుకింగ్ ఉంది!",adminLogin:"అడ్మిన్ లాగిన్",userLogin:"యూజర్ లాగిన్",allBookings:"అన్ని బుకింగ్‌లు",slotManager:"స్లాట్ మేనేజర్",userManager:"యూజర్ మేనేజర్",overview:"అవలోకనం" },
-  ta: { welcome:"வரவேற்கிறோம்",unit:"4213 யூஆர்சி என்சிசி குழு, கர்நூல்",tagline:"இ-ஸ்லாட் இங்கே பதிவு செய்யுங்கள்",motto:"ஒற்றுமை மற்றும் ஒழுக்கம்",nonMemberNote:"உறுப்பினர் அல்லாதவர்கள் மளிகை மட்டுமே பதிவு செய்யலாம்.",servingNote:"சேவையில் உள்ளவர்கள் மதுபானத்திற்கு OIC ஐ தொடர்பு கொள்ளவும்.",grocery:"மளிகை",liquor:"மதுபானம்",both:"இரண்டும்",myBookings:"என் பதிவுகள் / ரத்து",downloadApp:"ஆப் பதிவிறக்கம்",myProfile:"என் சுயவிவரம்",liquorNote:"குறிப்பு: என்சிசி பதிவு செய்தவர்கள் மட்டுமே மதுபானம் பதிவு செய்யலாம்",aboutUs:"எங்களை பற்றி",aboutText:"தலைவர் மற்றும் யூஆர்சி ஜிபி தலைமையகத்தின் அனைத்து ஊழியர்களும் வீரர்கள், போர் விதவைகள் மற்றும் சேவையில் உள்ளவர்களுக்கு அனைத்து பிராண்டுகளையும் வழங்கி அதிகபட்ச திருப்தி அளிக்க இடைவிடாது முயற்சிக்கின்றனர்.",signIn:"உள்நுழை",register:"பதிவு",forgotPwd:"கடவுச்சொல் மறந்தீர்களா",email:"மின்னஞ்சல்",password:"கடவுச்சொல்",name:"உங்கள் பெயர்",choosePwd:"கடவுச்சொல் தேர்வு",rememberMe:"என்னை நினைவில் வையுங்கள்",login:"உள்நுழைக",bookSlot:"ஸ்லாட் பதிவு",dashboard:"டாஷ்போர்டு",cancel:"ரத்து",viewToken:"டோக்கன் பார்",confirmBooking:"பதிவை உறுதிப்படுத்து",selectCategory:"வகை",selectDate:"தேதி தேர்வு",selectTime:"நேரம் தேர்வு",spotsLeft:"இடங்கள்",full:"நிரம்பியது",holiday:"விடுமுறை",active:"செயல்பாட்டில்",completed:"முடிந்தது",cancelled:"ரத்தானது",bookingSuccess:"பதிவு உறுதிப்படுத்தப்பட்டது! 🎉",cancelSuccess:"பதிவு ரத்தானது",onePerDay:"இந்த தேதியில் ஏற்கனவே பதிவு உள்ளது!",adminLogin:"நிர்வாக உள்நுழைவு",userLogin:"பயனர் உள்நுழைவு",allBookings:"அனைத்து பதிவுகள்",slotManager:"ஸ்லாட் மேலாளர்",userManager:"பயனர் மேலாளர்",overview:"கண்ணோட்டம்" }
+  en: { welcome:"WELCOME TO",unit:"4213 URC NCC GROUP, KURNOOL",tagline:"Book Your E-Slots Here",motto:"Unity and Discipline",nonMemberNote:"Non-Members are only allowed to book Grocery.",servingNote:"All Serving Personnel are requested to contact OIC/Canteen manager for drawl of liquor with Leave Certificate.",grocery:"GROCERY",liquor:"LIQUOR",both:"BOTH",myBookings:"MY BOOKINGS / CANCEL",downloadApp:"DOWNLOAD APP",myProfile:"MY PROFILE",liquorNote:"Note: Only URC NCC Group registered customers can book Liquor",aboutUs:"ABOUT US",aboutText:"Chairman, and all Staff members of URC GP HQ are constantly striving hard to provide utmost satisfaction to Veterans, War Widows, and Serving Pers by ensuring all variety of brands are made available be it Grocery or Liquor items. Our singular aim is to provide utmost satisfaction to our esteemed customers.",signIn:"Sign In",register:"Register",forgotPwd:"Forgot Password",email:"Email Address",password:"Password",name:"Your Name",choosePwd:"Choose a Password",rememberMe:"Remember Me",login:"Log In",bookSlot:"Book Slot",dashboard:"Dashboard",cancel:"Cancel",viewToken:"View Token",confirmBooking:"Confirm Booking",selectCategory:"Category",selectDate:"Select Date",selectTime:"Select Time",spotsLeft:"spots left",full:"Full",holiday:"Holiday",active:"Active",completed:"Completed",cancelled:"Cancelled",bookingSuccess:"Booking confirmed! 🎉",cancelSuccess:"Booking cancelled",onePerDay:"You already have a booking on this date!",adminLogin:"Admin Login",userLogin:"User Login",allBookings:"All Bookings",slotManager:"Slot Manager",userManager:"User Manager",overview:"Overview",welcomeMsg:"Welcome",noticeBoard:"Notice Board",noNoticesYet:"No notices posted yet",totalBookings:"Total Bookings",activeTokens:"Active Tokens",availableToday:"Available Today",upcomingBooking:"Upcoming Booking",date:"Date",time:"Time",token:"Token",noUpcomingBookings:"No upcoming bookings",bookSlotToVisit:"Book a slot to visit the canteen",adminOverview:"Admin Overview",realTimeMetrics:"Real-time system metrics for 4213 URC NCC",postUpdates:"Post updates that all users can see on their dashboard",postAnnouncement:"Post an announcement for users",postNotice:"Post Notice",todaysBookings:"Today's Bookings",totalUsers:"Total Users",pendingApproval:"Pending Approval",todaysSlotFillRate:"Today's Slot Fill Rate",bookingsByCategory:"Bookings by Category",groceryOnly:"Grocery",liquorOnly:"Liquor Only",groceryAndLiquor:"Grocery + Liquor",usersWithActiveBookings:"Users who currently have active bookings",show:"Show",hide:"Hide",language:"LANGUAGE",kurnool:"Kurnool",nccGroup:"4213 URC NCC",remove:"Remove",filled:"filled",notice:"notice",notices:"notices" },
+  hi: { welcome:"स्वागत है",unit:"4213 यूआरसी एनसीसी ग्रुप, कुर्नूल",tagline:"यहाँ अपना ई-स्लॉट बुक करें",motto:"एकता और अनुशासन",nonMemberNote:"गैर-सदस्य केवल ग्रोसरी बुक कर सकते हैं।",servingNote:"सेवारत कर्मियों से अनुरोध है कि लिकर निकासी के लिए OIC/कैंटीन प्रबंधक से संपर्क करें।",grocery:"किराना",liquor:"शराब",both:"दोनों",myBookings:"मेरी बुकिंग / रद्द",downloadApp:"ऐप डाउनलोड",myProfile:"मेरी प्रोफ़ाइल",liquorNote:"नोट: केवल यूआरसी एनसीसी के पंजीकृत ग्राहक शराब बुक कर सकते हैं",aboutUs:"हमारे बारे में",aboutText:"अध्यक्ष और यूआरसी जीपी मुख्यालय के सभी कर्मचारी वीरों, युद्ध विधवाओं और सेवारत कर्मियों को किराना और शराब दोनों प्रकार की सभी ब्रांड उपलब्ध कराकर अधिकतम संतुष्टि प्रदान करने का प्रयास करते हैं।",signIn:"साइन इन",register:"पंजीकरण",forgotPwd:"पासवर्ड भूल गए",email:"ईमेल पता",password:"पासवर्ड",name:"आपका नाम",choosePwd:"पासवर्ड चुनें",rememberMe:"मुझे याद रखें",login:"लॉग इन",bookSlot:"स्लॉट बुक करें",dashboard:"डैशबोर्ड",cancel:"रद्द करें",viewToken:"टोकन देखें",confirmBooking:"बुकिंग की पुष्टि",selectCategory:"श्रेणी",selectDate:"तारीख चुनें",selectTime:"समय चुनें",spotsLeft:"स्थान शेष",full:"भरा",holiday:"छुट्टी",active:"सक्रिय",completed:"पूर्ण",cancelled:"रद्द",bookingSuccess:"बुकिंग सफल! 🎉",cancelSuccess:"बुकिंग रद्द हुई",onePerDay:"इस तारीख पर पहले से बुकिंग है!",adminLogin:"एडमिन लॉगिन",userLogin:"यूजर लॉगिन",allBookings:"सभी बुकिंग",slotManager:"स्लॉट प्रबंधक",userManager:"यूजर प्रबंधक",overview:"अवलोकन",welcomeMsg:"स्वागत है",noticeBoard:"सूचना बोर्ड",noNoticesYet:"अभी कोई सूचना पोस्ट नहीं की गई",totalBookings:"कुल बुकिंग",activeTokens:"सक्रिय टोकन",availableToday:"आज उपलब्ध",upcomingBooking:"आने वाली बुकिंग",date:"तारीख",time:"समय",token:"टोकन",noUpcomingBookings:"कोई आने वाली बुकिंग नहीं",bookSlotToVisit:"कैंटीन पर जाने के लिए स्लॉट बुक करें",adminOverview:"एडमिन अवलोकन",realTimeMetrics:"4213 यूआरसी एनसीसी के लिए रीयल-टाइम मेट्रिक्स",postUpdates:"अपडेट पोस्ट करें जो सभी उपयोगकर्ता अपने डैशबोर्ड पर देख सकें",postAnnouncement:"उपयोगकर्ताओं के लिए घोषणा पोस्ट करें",postNotice:"सूचना पोस्ट करें",todaysBookings:"आज की बुकिंग",totalUsers:"कुल उपयोगकर्ता",pendingApproval:"स्वीकृति के लिए लंबित",todaysSlotFillRate:"आज की स्लॉट भरण दर",bookingsByCategory:"श्रेणी के अनुसार बुकिंग",groceryOnly:"किराना",liquorOnly:"केवल शराब",groceryAndLiquor:"किराना + शराब",usersWithActiveBookings:"वे उपयोगकर्ता जिनके पास सक्रिय बुकिंग है",show:"दिखाएँ",hide:"छिपाएँ",language:"भाषा",kurnool:"कुर्नूल",nccGroup:"4213 यूआरसी एनसीसी",remove:"हटाएँ",filled:"भरा",notice:"सूचना",notices:"सूचनाएं" },
+  te: { welcome:"స్వాగతం",unit:"4213 యూఆర్‌సీ ఎన్‌సీసీ గ్రూప్, కర్నూల్",tagline:"ఇక్కడ మీ ఇ-స్లాట్ బుక్ చేయండి",motto:"ఐక్యత మరియు క్రమశిక్షణ",nonMemberNote:"సభ్యులు కాని వారు కేవలం కిరాణా బుక్ చేయవచ్చు.",servingNote:"సేవలో ఉన్న సిబ్బంది మద్యం కోసం OIC/కాంటీన్ మేనేజర్‌ని సంప్రదించాలి.",grocery:"కిరాణా",liquor:"మద్యం",both:"రెండూ",myBookings:"నా బుకింగ్‌లు / రద్దు",downloadApp:"యాప్ డౌన్‌లోడ్",myProfile:"నా ప్రొఫైల్",liquorNote:"గమనిక: ఎన్‌సీసీ నమోదిత సభ్యులు మాత్రమే మద్యం బుక్ చేయవచ్చు",aboutUs:"మా గురించి",aboutText:"చైర్మన్ మరియు యూఆర్‌సీ జీపీ హెడ్‌క్వార్టర్స్ సిబ్బంది వెటరన్లు, యుద్ధ వితంతువులు మరియు సేవలో ఉన్న సిబ్బందికి అన్ని బ్రాండ్లు అందుబాటులో ఉంచి గరిష్ట సంతృప్తి కలిగించడానికి నిరంతరం కృషి చేస్తున్నారు.",signIn:"సైన్ ఇన్",register:"నమోదు",forgotPwd:"పాస్‌వర్డ్ మర్చిపోయారా",email:"ఇమెయిల్",password:"పాస్‌వర్డ్",name:"మీ పేరు",choosePwd:"పాస్‌వర్డ్ ఎంచుకోండి",rememberMe:"నన్ను గుర్తుంచుకో",login:"లాగిన్",bookSlot:"స్లాట్ బుక్",dashboard:"డ్యాష్‌బోర్డ్",cancel:"రద్దు",viewToken:"టోకెన్ చూడు",confirmBooking:"బుకింగ్ నిర్ధారించు",selectCategory:"వర్గం",selectDate:"తేదీ ఎంచుకోండి",selectTime:"సమయం ఎంచుకోండి",spotsLeft:"స్థానాలు",full:"నిండింది",holiday:"సెలవు",active:"సక్రియం",completed:"పూర్తి",cancelled:"రద్దు",bookingSuccess:"బుకింగ్ నిర్ధారించబడింది! 🎉",cancelSuccess:"బుకింగ్ రద్దు చేయబడింది",onePerDay:"ఈ తేదీకి బుకింగ్ ఉంది!",adminLogin:"అడ్మిన్ లాగిన్",userLogin:"యూజర్ లాగిన్",allBookings:"అన్ని బుకింగ్‌లు",slotManager:"స్లాట్ మేనేజర్",userManager:"యూజర్ మేనేజర్",overview:"అవలోకనం",welcomeMsg:"స్వాగతం",noticeBoard:"నోటిసు బోర్డ్",noNoticesYet:"ఇంకా నోటిసులు పోస్ట్ చేయలేదు",totalBookings:"మొత్తం బుకింగ్‌లు",activeTokens:"సక్రియ టోకెన్‌లు",availableToday:"ఈ రోజు అందుబాటులో",upcomingBooking:"రాబోయే బుకింగ్",date:"తేదీ",time:"సమయం",token:"టోకెన్",noUpcomingBookings:"రాబోయే బుకింగ్‌లు లేవు",bookSlotToVisit:"కెంటీన్‌కు వెళ్లడానికి స్లాట్ బుక్ చేయండి",adminOverview:"అడ్మిన్ అవలోకనం",realTimeMetrics:"4213 యూఆర్‌సీ ఎన్‌సీసీ కోసం రియల్-టైమ్ మెట్రిక్‌లు",postUpdates:"మీ డ్యాష్‌బోర్డ్‌లో సभी వినియోగదారులు చూడగలిగే అప్‌డేట్‌లు పోస్ట్ చేయండి",postAnnouncement:"వినియోగదారుల కోసం ఘోషణ పోస్ట్ చేయండి",postNotice:"నోటిసు పోస్ట్ చేయండి",todaysBookings:"ఈ రోజు బుకింగ్‌లు",totalUsers:"మొత్తం వినియోగదారులు",pendingApproval:"ఆమోదనకు పెండింగ్",todaysSlotFillRate:"ఈ రోజు స్లాట్ నింపే రేటు",bookingsByCategory:"వర్గం ద్వారా బుకింగ్‌లు",groceryOnly:"కిరాణా",liquorOnly:"మద్యం మాత్రమే",groceryAndLiquor:"కిరాణా + మద్యం",usersWithActiveBookings:"సక్రియ బుకింగ్‌లు ఉన్న వినియోగదారులు",show:"చూపించు",hide:"దాచు",language:"భాష",kurnool:"కర్నూల్",nccGroup:"4213 యూఆర్‌సీ ఎన్‌సీసీ",remove:"తొలగించండి",filled:"నిండింది",notice:"నోటిసు",notices:"నోటిసులు" },
+  ta: { welcome:"வரவேற்கிறோம்",unit:"4213 யூஆர்சி என்சிசி குழு, கர்நூல்",tagline:"இ-ஸ்லாட் இங்கே பதிவு செய்யுங்கள்",motto:"ஒற்றுமை மற்றும் ஒழுக்கம்",nonMemberNote:"உறுப்பினர் அல்லாதவர்கள் மளிகை மட்டுமே பதிவு செய்யலாம்.",servingNote:"சேவையில் உள்ளவர்கள் மதுபானத்திற்கு OIC ஐ தொடர்பு கொள்ளவும்.",grocery:"மளிகை",liquor:"மதுபானம்",both:"இரண்டும்",myBookings:"என் பதிவுகள் / ரத்து",downloadApp:"ஆப் பதிவிறக்கம்",myProfile:"என் சுயவிவரம்",liquorNote:"குறிப்பு: என்சிசி பதிவு செய்தவர்கள் மட்டுமே மதுபானம் பதிவு செய்யலாம்",aboutUs:"எங்களை பற்றி",aboutText:"தலைவர் மற்றும் யூஆர்சி ஜிபி தலைமையகத்தின் அனைத்து ஊழியர்களும் வீரர்கள், போர் விதவைகள் மற்றும் சேவையில் உள்ளவர்களுக்கு அனைத்து பிராண்டுகளையும் வழங்கி அதிகபட்ச திருப்தி அளிக்க இடைவிடாது முயற்சிக்கின்றனர்.",signIn:"உள்நுழை",register:"பதிவு",forgotPwd:"கடவுச்சொல் மறந்தீர்களா",email:"மின்னஞ்சல்",password:"கடவுச்சொல்",name:"உங்கள் பெயர்",choosePwd:"கடவுச்சொல் தேர்வு",rememberMe:"என்னை நினைவில் வையுங்கள்",login:"உள்நுழைக",bookSlot:"ஸ்லாட் பதிவு",dashboard:"டாஷ்போர்டு",cancel:"ரத்து",viewToken:"டோக்கன் பார்",confirmBooking:"பதிவை உறுதிப்படுத்து",selectCategory:"வகை",selectDate:"தேதி தேர்வு",selectTime:"நேரம் தேர்வு",spotsLeft:"இடங்கள்",full:"நிரம்பியது",holiday:"விடுமுறை",active:"செயல்பாட்டில்",completed:"முடிந்தது",cancelled:"ரத்தானது",bookingSuccess:"பதிவு உறுதிப்படுத்தப்பட்டது! 🎉",cancelSuccess:"பதிவு ரத்தானது",onePerDay:"இந்த தேதியில் ஏற்கனவே பதிவு உள்ளது!",adminLogin:"நிர்வாக உள்நுழைவு",userLogin:"பயனர் உள்நுழைவு",allBookings:"அனைத்து பதிவுகள்",slotManager:"ஸ்லாட் மேலாளர்",userManager:"பயனர் மேலாளர்",overview:"கண்ணோட்டம்",welcomeMsg:"வரவேற்கிறோம்",noticeBoard:"அறிப்பு பலகை",noNoticesYet:"இன்னும் எந்த அறிப்பும் பதிவிடப்படவில்லை",totalBookings:"மொத்த பதிவுகள்",activeTokens:"செயலில் உள்ள டோக்கன்கள்",availableToday:"இன்று கிடைக்கும்",upcomingBooking:"வரவிருக்கும் பதிவு",date:"தேதி",time:"நேரம்",token:"டோக்கன்",noUpcomingBookings:"வரவிருக்கும் பதிவுகள் இல்லை",bookSlotToVisit:"கான்டீன் பார்வையிட ஸ்லாட் பதிவு செய்யவும்",adminOverview:"நிர்வாக மேலோட்டம்",realTimeMetrics:"4213 யூஆர்சி என்சிசிக்கான நிজ-நேர மெட்ரிக்குகள்",postUpdates:"உங்கள் டாஷ்போர்டுவில் அனைத்து பயனர்களும் பார்க்கக்கூடிய புதுப்பிப்புகளை பதிவிடவும்",postAnnouncement:"பயனர்களுக்கான அறிவிப்பு பதிவிடவும்",postNotice:"அறிப்பு பதிவிடவும்",todaysBookings:"இன்றைய பதிவுகள்",totalUsers:"மொத்த பயனர்கள்",pendingApproval:"ஒப்புதலுக்கு காத்திருக்கிறது",todaysSlotFillRate:"இன்றைய ஸ்லாட் நிரப்பு விகிதம்",bookingsByCategory:"வகையின் அடிப்படையில் பதிவுகள்",groceryOnly:"மளிகை",liquorOnly:"மதுபானம் மட்டுமே",groceryAndLiquor:"மளிகை + மதுபானம்",usersWithActiveBookings:"செயலில் உள்ள பதிவுகள் உள்ள பயனர்கள்",show:"காட்டு",hide:"மறை",language:"மொழி",kurnool:"கர்நூல்",nccGroup:"4213 யூஆர்சி என்சிசி",remove:"அகற்று",filled:"நிரம்பியது",notice:"அறிப்பு",notices:"அறிப்புகள்" }
 };
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -93,7 +98,7 @@ function validatePasswordRules(password: string) {
   };
 }
 
-function PasswordField({ label, value, setValue, visible, setVisible, placeholder, onEnter, inputStyle }: any) {
+function PasswordField({ label, value, setValue, visible, setVisible, placeholder, onEnter, inputStyle, t }: any) {
   const mergedInputStyle = inputStyle || {
     width: "100%",
     padding: "13px 72px 13px 15px",
@@ -124,7 +129,7 @@ function PasswordField({ label, value, setValue, visible, setVisible, placeholde
           aria-label={visible ? "Hide password" : "Show password"}
           style={{ position: "absolute", right: 10, top: "50%", transform: "translateY(-50%)", border: "none", background: "transparent", color: "#1F3D2B", fontSize: 12, fontWeight: 700, cursor: "pointer", padding: "4px 6px" }}
         >
-          {visible ? "Hide" : "Show"}
+          {visible ? t.hide : t.show}
         </button>
       </div>
     </div>
@@ -204,6 +209,167 @@ function Toast({ toasts, remove }: any) {
           </button>
         </div>
       ))}
+    </div>
+  );
+}
+
+function PwaInstallPrompt() {
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const [visible, setVisible] = useState(false);
+  const [isIos, setIsIos] = useState(false);
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    const dismissed = localStorage.getItem("pwa-install-dismissed") === "1";
+    const ua = window.navigator.userAgent.toLowerCase();
+    const ios = /iphone|ipad|ipod/.test(ua);
+    const standalone = window.matchMedia("(display-mode: standalone)").matches || (window.navigator as any).standalone === true;
+
+    setIsIos(ios);
+    setIsStandalone(standalone);
+
+    const onBeforeInstallPrompt = (event: Event) => {
+      event.preventDefault();
+      setDeferredPrompt(event as BeforeInstallPromptEvent);
+      if (!dismissed && !standalone) setVisible(true);
+    };
+
+    const onAppInstalled = () => {
+      setVisible(false);
+      setDeferredPrompt(null);
+      localStorage.removeItem("pwa-install-dismissed");
+    };
+
+    window.addEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+    window.addEventListener("appinstalled", onAppInstalled);
+
+    if (ios && !standalone && !dismissed) {
+      setVisible(true);
+    }
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", onBeforeInstallPrompt);
+      window.removeEventListener("appinstalled", onAppInstalled);
+    };
+  }, []);
+
+  if (!visible || isStandalone) return null;
+
+  const dismiss = () => {
+    setVisible(false);
+    localStorage.setItem("pwa-install-dismissed", "1");
+  };
+
+  const install = async () => {
+    if (!deferredPrompt) return;
+
+    await deferredPrompt.prompt();
+    const choice = await deferredPrompt.userChoice;
+    if (choice.outcome === "accepted") {
+      setVisible(false);
+    }
+    setDeferredPrompt(null);
+  };
+
+  const showNativeInstall = !!deferredPrompt;
+
+  return (
+    <div
+      style={{
+        position: "fixed",
+        inset: "auto 16px 16px 16px",
+        zIndex: 3000,
+        display: "flex",
+        justifyContent: "center",
+        pointerEvents: "none",
+      }}
+    >
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 420,
+          background: "linear-gradient(135deg,#1F3D2B,#2d5a3d)",
+          color: "#fff",
+          borderRadius: 22,
+          padding: "18px 18px 16px",
+          boxShadow: "0 24px 64px rgba(0,0,0,0.22)",
+          pointerEvents: "auto",
+        }}
+      >
+        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
+          <div>
+            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Install URC NCC App</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.82)", lineHeight: 1.5 }}>
+              {showNativeInstall
+                ? "Add this website to your phone like an app for quick booking, offline caching, and a full-screen experience."
+                : isIos
+                  ? "On iPhone, tap Share and then Add to Home Screen to install this app."
+                  : "This app will be installable once your browser allows the install prompt."}
+            </div>
+          </div>
+          <button
+            onClick={dismiss}
+            style={{
+              background: "rgba(255,255,255,0.12)",
+              border: "none",
+              borderRadius: "50%",
+              width: 30,
+              height: 30,
+              cursor: "pointer",
+              color: "#fff",
+              fontSize: 18,
+              lineHeight: 1,
+            }}
+          >
+            ×
+          </button>
+        </div>
+
+        {isIos && !showNativeInstall && (
+          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: "11px 12px", fontSize: 12, marginBottom: 12 }}>
+            1. Tap the browser Share button.
+            <br />
+            2. Choose <strong>Add to Home Screen</strong>.
+          </div>
+        )}
+
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+          {showNativeInstall && (
+            <button
+              onClick={install}
+              style={{
+                background: "#fff",
+                color: "#1F3D2B",
+                border: "none",
+                borderRadius: 12,
+                padding: "11px 16px",
+                cursor: "pointer",
+                fontSize: 13,
+                fontWeight: 800,
+                fontFamily: "'DM Sans',sans-serif",
+              }}
+            >
+              Install App
+            </button>
+          )}
+          <button
+            onClick={dismiss}
+            style={{
+              background: "transparent",
+              color: "#fff",
+              border: "1px solid rgba(255,255,255,0.28)",
+              borderRadius: 12,
+              padding: "11px 16px",
+              cursor: "pointer",
+              fontSize: 13,
+              fontWeight: 700,
+              fontFamily: "'DM Sans',sans-serif",
+            }}
+          >
+            Not Now
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -290,7 +456,7 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang, mobil
   const items = [
     { id: "dashboard", label: t.dashboard, icon: "⊞" },
     { id: "book", label: t.bookSlot, icon: "📅" },
-    { id: "bookings", label: "My Bookings", icon: "🎫" },
+    { id: "bookings", label: t.myBookings, icon: "🎫" },
     { id: "profile", label: t.myProfile, icon: "👤" },
   ];
   return (
@@ -324,9 +490,9 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang, mobil
             <div
               style={{ color: "#fff", fontWeight: 700, fontSize: 11, lineHeight: 1.2 }}
             >
-              4213 URC NCC
+              {t.nccGroup}
             </div>
-            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 9 }}>Kurnool</div>
+            <div style={{ color: "rgba(255,255,255,0.4)", fontSize: 9 }}>{t.kurnool}</div>
           </div>
         </div>
       </div>
@@ -376,7 +542,7 @@ function UserSidebar({ active, onNav, user, onLogout, dark, lang, setLang, mobil
               paddingLeft: 4,
             }}
           >
-            LANGUAGE
+            {t.language}
           </p>
           <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
             <LangBar lang={lang} setLang={setLang} dark={true} compact={true} />
@@ -420,6 +586,7 @@ function AdminSidebar({ active, onNav, user, onLogout, dark, mobile = false, ope
   // Only Slot Manager and User Manager (no All Bookings link)
   const items = [
     { id: "admin-dashboard", label: "Overview", icon: "📊" },
+    { id: "admin-tokens", label: "Token Manager", icon: "🎫" },
     { id: "admin-slots", label: "Slot Manager", icon: "⚙️" },
     { id: "admin-users", label: "User Manager", icon: "👥" },
   ];
@@ -559,7 +726,15 @@ function AdminSidebar({ active, onNav, user, onLogout, dark, mobile = false, ope
 // ── Home page ─────────────────────────────────────────────────────────────────
 function HomePage({ onGoAuth, lang, setLang }: any) {
   const t = (T as any)[lang];
-  const isMobile = typeof window !== "undefined" ? window.innerWidth < 640 : false;
+  const [isMobile, setIsMobile] = useState(() => typeof window !== "undefined" ? window.innerWidth < 640 : false);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 640);
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   return (
     <div style={{ minHeight: "100vh", fontFamily: "'DM Sans',sans-serif", background: "#f5f6f7" }}>
       <div style={{ background: "#1F3D2B", color: "#fff", padding: isMobile ? "9px 14px" : "9px 24px", display: "flex", alignItems: isMobile ? "flex-start" : "center", justifyContent: isMobile ? "flex-start" : "space-between", flexDirection: isMobile ? "column" : "row", flexWrap: "wrap", gap: 8 }}>
@@ -641,7 +816,7 @@ function AuthScreen({ mode, onLogin, onBack, lang, setLang }: any) {
   const resetToken = new URLSearchParams(window.location.search).get("resetToken");
   const [tab, setTab] = useState("signin");
   const [email, setEmail] = useState(""), [pwd, setPwd] = useState(""), [err, setErr] = useState(""), [loading, setLoading] = useState(false);
-  const [rName, setRName] = useState(""), [rEmail, setREmail] = useState(""), [rPwd, setRPwd] = useState(""), [rRegiment, setRRegiment] = useState("");
+  const [rName, setRName] = useState(""), [rEmail, setREmail] = useState(""), [rPwd, setRPwd] = useState(""), [rRegiment, setRRegiment] = useState(""), [rCardId, setRCardId] = useState("");
   const [forgotEmail, setForgotEmail] = useState("");
   const [resetPwd, setResetPwd] = useState("");
   const [resetConfirmPwd, setResetConfirmPwd] = useState("");
@@ -700,7 +875,7 @@ function AuthScreen({ mode, onLogin, onBack, lang, setLang }: any) {
         setErr("Password does not meet the required rules.");
         return;
       }
-      const res = await API.post("/auth/register", { name: rName, email: rEmail, password: rPwd, regiment: rRegiment });
+      const res = await API.post("/auth/register", { name: rName, email: rEmail, password: rPwd, regiment: rRegiment, cardId: rCardId });
       if (res && res.data && res.data.success) {
         try {
           const loginRes = await API.post("/auth/login", { email: rEmail, password: rPwd });
@@ -797,7 +972,7 @@ function AuthScreen({ mode, onLogin, onBack, lang, setLang }: any) {
                   <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>{t.email}</label>
                   <input type="email" value={email} onChange={(e: any) => setEmail(e.target.value)} placeholder="Enter email" onKeyDown={(e: any) => e.key === "Enter" && doLogin()} style={fieldStyle} onFocus={(e: any) => e.target.style.borderColor = "#1F3D2B"} onBlur={(e: any) => e.target.style.borderColor = "#e5e7eb"} />
                 </div>
-                <PasswordField label={t.password} value={pwd} setValue={setPwd} visible={showLoginPwd} setVisible={setShowLoginPwd} placeholder="Password" onEnter={doLogin} inputStyle={passwordFieldStyle} />
+                <PasswordField label={t.password} value={pwd} setValue={setPwd} visible={showLoginPwd} setVisible={setShowLoginPwd} placeholder="Password" onEnter={doLogin} inputStyle={passwordFieldStyle} t={t} />
                 {!isAdmin && <label style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 18, cursor: "pointer" }}><input type="checkbox" style={{ width: 15, height: 15 }} /><span style={{ fontSize: 13, color: "#555" }}>{t.rememberMe}</span></label>}
                 {err && <div style={{ background: "#fef2f2", border: "1.5px solid #fecaca", borderRadius: 10, padding: "9px 14px", color: "#dc2626", fontSize: 13, marginBottom: 14 }}>{err}</div>}
                 <button onClick={doLogin} disabled={loading} style={{ width: "100%", padding: "14px", background: isAdmin ? "linear-gradient(135deg,#92400e,#b45309)" : "linear-gradient(135deg,#1F3D2B,#2d5a3d)", border: "none", borderRadius: 12, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
@@ -817,7 +992,11 @@ function AuthScreen({ mode, onLogin, onBack, lang, setLang }: any) {
                   <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>{t.email}</label>
                   <input type="email" value={rEmail} onChange={(e: any) => setREmail(e.target.value)} placeholder="Email" style={fieldStyle} />
                 </div>
-                <PasswordField label={t.choosePwd} value={rPwd} setValue={setRPwd} visible={showRegisterPwd} setVisible={setShowRegisterPwd} placeholder="Password" />
+                <div style={{ marginBottom: 14 }}>
+                  <label style={{ display: "block", fontSize: 12, fontWeight: 600, color: "#555", marginBottom: 6 }}>Card ID</label>
+                  <input type="text" value={rCardId} onChange={(e: any) => setRCardId(e.target.value)} placeholder="Enter card ID" style={fieldStyle} />
+                </div>
+                <PasswordField label={t.choosePwd} value={rPwd} setValue={setRPwd} visible={showRegisterPwd} setVisible={setShowRegisterPwd} placeholder="Password" t={t} />
                 <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
                   <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 8 }}>
                     Password Rules
@@ -875,8 +1054,8 @@ function AuthScreen({ mode, onLogin, onBack, lang, setLang }: any) {
                   </>
                 ) : (
                   <>
-                    <PasswordField label="New Password" value={resetPwd} setValue={setResetPwd} visible={showResetPwd} setVisible={setShowResetPwd} placeholder="New Password" inputStyle={passwordFieldStyle} />
-                    <PasswordField label="Confirm Password" value={resetConfirmPwd} setValue={setResetConfirmPwd} visible={showResetConfirmPwd} setVisible={setShowResetConfirmPwd} placeholder="Confirm Password" inputStyle={passwordFieldStyle} />
+                    <PasswordField label="New Password" value={resetPwd} setValue={setResetPwd} visible={showResetPwd} setVisible={setShowResetPwd} placeholder="New Password" inputStyle={passwordFieldStyle} t={t} />
+                    <PasswordField label="Confirm Password" value={resetConfirmPwd} setValue={setResetConfirmPwd} visible={showResetConfirmPwd} setVisible={setShowResetConfirmPwd} placeholder="Confirm Password" inputStyle={passwordFieldStyle} t={t} />
                     <div style={{ background: "#f9fafb", border: "1px solid #e5e7eb", borderRadius: 12, padding: "12px 14px", marginBottom: 14 }}>
                       <div style={{ fontSize: 12, fontWeight: 700, color: "#374151", marginBottom: 8 }}>Password Rules</div>
                       {[
@@ -914,6 +1093,16 @@ function BookSlot({ lang }: any) {
   const { currentUser, slots, bookings, showToast, updateSlots, updateBookings } = useApp(), t = (T as any)[lang];
   const [step,    setStep]    = useState(1);
   const [cat,     setCat]     = useState("");
+  const CLOSING_SLOT_TIME = "4:00 PM - 5:00 PM";
+  const SLOT_TIME_ORDER = [
+    "9:00 AM - 10:00 AM",
+    "10:00 AM - 11:00 AM",
+    "11:00 AM - 12:00 PM",
+    "12:00 PM - 1:00 PM",
+    "2:00 PM - 3:00 PM",
+    "3:00 PM - 4:00 PM",
+    "4:00 PM - 5:00 PM",
+  ];
   // Convert Prisma enum value back to human-readable label for display
   const catLabel = (v: string) =>
     v === "GROCERY"            ? "Grocery"
@@ -922,6 +1111,8 @@ function BookSlot({ lang }: any) {
   : v;
   const [selDate, setSelDate] = useState("");
   const [selSlot, setSelSlot] = useState<any>(null);
+  const allowedCategory = currentUser?.allowedCategory || "BOTH";
+  const [nowTime, setNowTime] = useState(() => new Date());
 
   // Calendar view state — starts on the current month
   const todayObj = new Date();
@@ -933,6 +1124,11 @@ function BookSlot({ lang }: any) {
 
   const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
   const DAY_NAMES   = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+  useEffect(() => {
+    const timer = window.setInterval(() => setNowTime(new Date()), 60000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   // Month navigation — cannot go before the current month
   const atMinMonth = calYear === todayObj.getFullYear() && calMonth === todayObj.getMonth();
@@ -977,18 +1173,46 @@ function BookSlot({ lang }: any) {
     return String(d).slice(0, 10);
   };
 
+  const getMinutesNow = () => (nowTime.getHours() * 60) + nowTime.getMinutes();
+  const getSlotEndMinutes = (timeRange: string) => {
+    const endLabel = String(timeRange || "").split(" - ")[1];
+    if (!endLabel) return Number.MAX_SAFE_INTEGER;
+
+    const match = endLabel.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+    if (!match) return Number.MAX_SAFE_INTEGER;
+
+    let hour = Number(match[1]);
+    const minutes = Number(match[2]);
+    const meridiem = match[3].toUpperCase();
+
+    if (meridiem === "PM" && hour !== 12) hour += 12;
+    if (meridiem === "AM" && hour === 12) hour = 0;
+
+    return (hour * 60) + minutes;
+  };
+  const isSlotExpiredForToday = (slot: any) => nd(slot?.date) === todayStr && getMinutesNow() >= getSlotEndMinutes(slot?.time);
+
   // Summarise slots for a date string
   // Uses nd() to normalise all date formats before comparing
   const slotInfo = (dateStr: string) => {
     const ds       = slots.filter((s: any) => nd(s.date) === dateStr);
     const hasSlots = ds.length > 0;
-    const isHol    = hasSlots && ds.every((s: any) => s.disabled === true);
-    const isFull   = hasSlots && !isHol && ds.every((s: any) => (s.booked || 0) >= s.capacity);
-    const avail    = ds.filter((s: any) => s.disabled !== true && (s.booked || 0) < s.capacity).length;
+    const isSlotClosed = (s: any) => s.disabled === true || s.time === CLOSING_SLOT_TIME || isSlotExpiredForToday(s);
+    const isHol    = hasSlots && ds.every((s: any) => isSlotClosed(s));
+    const isFull   = hasSlots && !isHol && ds.every((s: any) => !isSlotClosed(s) && (s.booked || 0) >= s.capacity);
+    const avail    = ds.filter((s: any) => !isSlotClosed(s) && (s.booked || 0) < s.capacity).length;
     return { hasSlots, isHol, isFull, avail };
   };
 
-  const dateSlots     = selDate ? slots.filter((s: any) => nd(s.date) === selDate) : [];
+  const dateSlots     = selDate
+    ? slots
+        .filter((s: any) => nd(s.date) === selDate)
+        .sort((a: any, b: any) => {
+          const aIndex = SLOT_TIME_ORDER.indexOf(a.time);
+          const bIndex = SLOT_TIME_ORDER.indexOf(b.time);
+          return (aIndex >= 0 ? aIndex : 999) - (bIndex >= 0 ? bIndex : 999);
+        })
+    : [];
   const alreadyBooked = selDate && bookings.some((b: any) => b.userId === currentUser.id && nd(b.date) === selDate && b.status === "active");
 
   const confirm = async () => {
@@ -1048,7 +1272,11 @@ function BookSlot({ lang }: any) {
             { id: "GROCERY",           label: "Grocery",           icon: "🛒",    desc: "Open to all" },
             { id: "LIQUOR_ONLY",       label: "Liquor Only",       icon: "🥃",    desc: "Registered members" },
             { id: "GROCERY_AND_LIQUOR",label: "Grocery + Liquor",  icon: "🛒🥃",  desc: "Combined" },
-          ].map((c: any) => (
+          ].filter((c: any) => (
+            allowedCategory === "BOTH"
+            || (allowedCategory === "GROCERY_ONLY" && c.id === "GROCERY")
+            || (allowedCategory === "LIQUOR_ONLY" && c.id === "LIQUOR_ONLY")
+          )).map((c: any) => (
             <button key={c.id} onClick={() => { setCat(c.id); setStep(2); }}
               style={{ background: "var(--card)", border: "2px solid var(--border)", borderRadius: 16, padding: "22px 16px", cursor: "pointer", textAlign: "left", boxShadow: "var(--shadow)", fontFamily: "'DM Sans',sans-serif", transition: "all 0.2s" }}
               onMouseEnter={(e: any) => { e.currentTarget.style.borderColor = "#1F3D2B"; e.currentTarget.style.transform = "translateY(-3px)"; }}
@@ -1070,11 +1298,7 @@ function BookSlot({ lang }: any) {
             <div style={{ background: "#fef3c7", border: "1.5px solid #f59e0b", borderRadius: 12, padding: "11px 16px", marginBottom: 16, fontSize: 13, color: "#92400e", fontWeight: 500 }}>
               ⚠️ No slots have been added by admin yet. Please check back later.
             </div>
-          ) : (
-            <div style={{ background: "var(--card)", borderRadius: 10, padding: "8px 14px", marginBottom: 12, fontSize: 11, color: "var(--muted)", border: "1px solid var(--border)" }}>
-              📊 {slots.length} slot{slots.length !== 1 ? "s" : ""} loaded · Dates: {[...new Set(slots.map((s: any) => nd(s.date)))].sort().join(", ")}
-            </div>
-          )}
+          ) : null}
           {/* Calendar card */}
           <div style={{ background: "var(--card)", borderRadius: 18, boxShadow: "var(--shadow)", overflow: "hidden", maxWidth: 460 }}>
 
@@ -1214,22 +1438,40 @@ function BookSlot({ lang }: any) {
               ⚠️ {t.onePerDay}
             </div>
           )}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(165px,1fr))", gap: 11 }}>
+          {/* Legend */}
+          <div style={{ display: "flex", gap: 12, marginBottom: 16, flexWrap: "wrap", fontSize: 11 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 10, height: 10, background: "#22c55e", borderRadius: 3 }} /> Available
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 10, height: 10, background: "#f59e0b", borderRadius: 3 }} /> Limited
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 10, height: 10, background: "#ef4444", borderRadius: 3 }} /> Full
+            </div>
+          </div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(180px,1fr))", gap: 12 }}>
             {dateSlots.map((slot: any) => {
+              const isClosed = slot.disabled || slot.time === CLOSING_SLOT_TIME || isSlotExpiredForToday(slot);
               const rem = slot.capacity - slot.booked, pct = (slot.booked / slot.capacity) * 100, isFull = rem <= 0;
+              const barColor = pct > 80 ? "#ef4444" : pct > 50 ? "#f59e0b" : "#22c55e";
               return (
                 <button key={slot.id}
-                  onClick={() => { if (!isFull && !slot.disabled) { setSelSlot(slot); setStep(4); } }}
-                  disabled={isFull || slot.disabled}
-                  style={{ background: "var(--card)", border: `2px solid ${isFull ? "#fecaca" : "var(--border)"}`, borderRadius: 15, padding: "17px 15px", cursor: isFull ? "not-allowed" : "pointer", opacity: isFull ? 0.5 : 1, textAlign: "left", boxShadow: "var(--shadow)", fontFamily: "'DM Sans',sans-serif", transition: "all 0.15s" }}
-                  onMouseEnter={(e: any) => { if (!isFull) { e.currentTarget.style.borderColor = "#1F3D2B"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
-                  onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = isFull ? "#fecaca" : "var(--border)"; e.currentTarget.style.transform = "translateY(0)"; }}>
-                  <div style={{ fontSize: 16, fontWeight: 800, color: "var(--text)", marginBottom: 7 }}>{slot.time}</div>
-                  <div style={{ height: 4, background: "#e5e7eb", borderRadius: 3, marginBottom: 5, overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${pct}%`, background: pct > 80 ? "#ef4444" : pct > 50 ? "#f59e0b" : "#22c55e", borderRadius: 3 }} />
+                  onClick={() => { if (!isFull && !isClosed) { setSelSlot(slot); setStep(4); } }}
+                  disabled={isFull || isClosed}
+                  style={{ background: "var(--card)", border: `2px solid ${isFull || isClosed ? "#fecaca" : "var(--border)"}`, borderRadius: 15, padding: "18px 16px", cursor: isFull || isClosed ? "not-allowed" : "pointer", opacity: isFull || isClosed ? 0.6 : 1, textAlign: "left", boxShadow: "var(--shadow)", fontFamily: "'DM Sans',sans-serif", transition: "all 0.15s" }}
+                  onMouseEnter={(e: any) => { if (!isFull && !isClosed) { e.currentTarget.style.borderColor = "#1F3D2B"; e.currentTarget.style.transform = "translateY(-2px)"; } }}
+                  onMouseLeave={(e: any) => { e.currentTarget.style.borderColor = isFull || isClosed ? "#fecaca" : "var(--border)"; e.currentTarget.style.transform = "translateY(0)"; }}>
+                  <div style={{ fontSize: 15, fontWeight: 800, color: "var(--text)", marginBottom: 8 }}>{slot.time}</div>
+                  <div style={{ height: 6, background: "#e5e7eb", borderRadius: 4, marginBottom: 8, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${pct}%`, background: barColor, borderRadius: 4, transition: "width 0.3s" }} />
                   </div>
-                  <div style={{ fontSize: 12, color: isFull ? "#ef4444" : "#16a34a", fontWeight: 600 }}>{isFull ? t.full : `${rem} ${t.spotsLeft}`}</div>
-                  <div style={{ fontSize: 10, color: "var(--muted)", marginTop: 2 }}>{slot.booked}/{slot.capacity} booked</div>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ fontSize: 12, color: isFull || isClosed ? "#ef4444" : "#16a34a", fontWeight: 600 }}>
+                      {isClosed ? (isSlotExpiredForToday(slot) ? "TIME OVER" : "CLOSED") : isFull ? "FULL" : `${rem} spots`}
+                    </div>
+                    <div style={{ fontSize: 10, color: "var(--muted)" }}>{slot.booked}/{slot.capacity}</div>
+                  </div>
                 </button>
               );
             })}
@@ -1358,7 +1600,7 @@ function UserProfile() {
             <span style={{ fontSize: 10, background: "#dcfce7", color: "#166534", padding: "2px 8px", borderRadius: 20, fontWeight: 700, display: "inline-block", marginTop: 4 }}>ACTIVE</span>
           </div>
         </div>
-        {[["Regiment", currentUser.regiment], ["Role", currentUser.role], ["Member ID", currentUser.id]].map(([k, v]) => (
+        {[["Regiment", currentUser.regiment], ["Card ID", currentUser.cardId || "-"], ["Role", currentUser.role]].map(([k, v]) => (
           <div key={k} style={{ display: "flex", justifyContent: "space-between", padding: "9px 0", borderBottom: "1px solid var(--border)" }}>
             <span style={{ fontSize: 13, color: "var(--muted)" }}>{k}</span>
             <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text)", textTransform: "capitalize" }}>{v}</span>
@@ -1400,43 +1642,52 @@ export default function App() {
     if (resetToken) setScreen("auth-user");
   }, []);
   const fetchData = async () => {
-    // Fetch slots independently — available to all users without auth
-    try {
-      const sRes = await API.get("/slots");
-      setSlots(sRes.data.data);
-    } catch (err: any) {
+    const [slotsResult, noticesResult] = await Promise.allSettled([
+      API.get("/slots"),
+      API.get("/notices"),
+    ]);
+
+    if (slotsResult.status === "fulfilled") {
+      setSlots(slotsResult.value.data.data);
+    } else {
+      const err: any = slotsResult.reason;
       console.error("Slots fetch error", err?.response?.status, err?.message);
     }
 
-    // Fetch bookings — requires valid auth token
-    try {
-      const nRes = await API.get("/notices");
-      setNotices(nRes.data.data);
-    } catch (err: any) {
+    if (noticesResult.status === "fulfilled") {
+      setNotices(noticesResult.value.data.data);
+    } else {
+      const err: any = noticesResult.reason;
       console.error("Notices fetch error", err?.response?.status, err?.message);
     }
 
     if (!localStorage.getItem("token")) return;
 
-    try {
-      const bRes = await API.get("/bookings");
-      setBookings(bRes.data.data.map(normalizeBooking));
-    } catch (err: any) {
+    const isAdminToken = getTokenRole() === "ADMIN";
+    const authRequests = await Promise.allSettled([
+      API.get("/bookings"),
+      ...(isAdminToken ? [API.get("/users")] : []),
+    ]);
+
+    const bookingsResult: any = authRequests[0];
+    if (bookingsResult?.status === "fulfilled") {
+      setBookings(bookingsResult.value.data.data.map(normalizeBooking));
+    } else {
+      const err: any = bookingsResult?.reason;
       if (err?.response?.status === 401 || err?.response?.status === 403) {
-        // Token expired — clear it so user gets redirected to login
         localStorage.removeItem("token");
       }
       console.error("Bookings fetch error", err?.response?.status);
     }
 
-    // Fetch users — only needed for admin; gracefully ignore 403 for regular users
-    if (getTokenRole() !== "ADMIN") return;
-
-    try {
-      const uRes = await API.get("/users");
-      setUsers(uRes.data.data);
-    } catch (err: any) {
-      console.error("Users fetch error", err?.response?.status);
+    if (isAdminToken && authRequests[1]) {
+      const usersResult: any = authRequests[1];
+      if (usersResult.status === "fulfilled") {
+        setUsers(usersResult.value.data.data);
+      } else {
+        const err: any = usersResult.reason;
+        console.error("Users fetch error", err?.response?.status);
+      }
     }
   };
 
@@ -1453,10 +1704,11 @@ export default function App() {
   // Normalise role to lowercase so "ADMIN" from the DB is treated correctly.
   const adminFlag = isAdminUser(currentUser);
 
-  if (screen === "home") return <HomePage onGoAuth={(m: any) => setScreen(`auth-${m}`)} lang={lang} setLang={setLang} />;
+  if (screen === "home") return <><HomePage onGoAuth={(m: any) => setScreen(`auth-${m}`)} lang={lang} setLang={setLang} /><PwaInstallPrompt /></>;
 
   if (screen === "auth-user" || screen === "auth-admin") {
     return (
+      <>
       <AuthScreen
         mode={screen === "auth-admin" ? "admin" : "user"}
         onLogin={(u: any) => {
@@ -1472,6 +1724,8 @@ export default function App() {
         users={users}
         setUsers={setUsers}
       />
+      <PwaInstallPrompt />
+      </>
     );
   }
 
@@ -1486,8 +1740,9 @@ export default function App() {
 
   // Admin pages — imported from AdminDashboard.tsx
   const aPages: any = {
-    "admin-dashboard": <AdminDashboard />,
+    "admin-dashboard": <AdminDashboard lang={lang} onNav={setPage} />,
     "admin-slots": <AdminSlots />,
+    "admin-tokens": <AdminTokens />,
     "admin-users": <AdminUsers />,
   };
 
@@ -1553,6 +1808,7 @@ export default function App() {
           }
         </main>
       </div>
+      <PwaInstallPrompt />
       <Toast toasts={toasts} remove={removeToast} />
     </Ctx.Provider>
   );

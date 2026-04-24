@@ -1,0 +1,12 @@
+DO $$
+BEGIN
+  CREATE TYPE "UserBookingAccess" AS ENUM ('GROCERY_ONLY', 'LIQUOR_ONLY', 'BOTH');
+EXCEPTION
+  WHEN duplicate_object THEN NULL;
+END $$;
+
+ALTER TABLE "users"
+ADD COLUMN IF NOT EXISTS "cardId" VARCHAR(50);
+
+ALTER TABLE "users"
+ADD COLUMN IF NOT EXISTS "allowedCategory" "UserBookingAccess" NOT NULL DEFAULT 'BOTH';

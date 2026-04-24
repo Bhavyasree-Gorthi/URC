@@ -25,9 +25,9 @@ exports.register = async (req, res) => {
   try {
     console.log("BODY:", req.body);
 
-    const { name, email, password, regiment } = req.body;
+    const { name, email, password, regiment, cardId } = req.body;
 
-    if (!name || !email || !password || !regiment) {
+    if (!name || !email || !password || !regiment || !cardId) {
       return res.status(400).json({ message: "All fields required" });
     }
 
@@ -45,6 +45,7 @@ exports.register = async (req, res) => {
         email,
         passwordHash: hash,
         regiment,
+        cardId,
       },
     });
 
@@ -94,8 +95,11 @@ exports.login = async (req, res) => {
         id: user.id,
         name: user.name,
         role: user.role,
+        status: user.status,
         email: user.email,
         regiment: user.regiment,
+        cardId: user.cardId,
+        allowedCategory: user.allowedCategory,
       },
     });
 

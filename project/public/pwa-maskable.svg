@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#1f3d2b"/>
+  <circle cx="256" cy="180" r="92" fill="#d4af37"/>
+  <path d="M256 106l21 45 50 7-36 35 9 49-44-23-44 23 9-49-36-35 50-7z" fill="#163123"/>
+  <rect x="82" y="274" width="348" height="146" rx="30" fill="#ffffff"/>
+  <text x="256" y="334" text-anchor="middle" font-family="Arial, sans-serif" font-size="48" font-weight="700" fill="#1f3d2b">URC</text>
+  <text x="256" y="384" text-anchor="middle" font-family="Arial, sans-serif" font-size="42" font-weight="700" fill="#1f3d2b">NCC</text>
+</svg>

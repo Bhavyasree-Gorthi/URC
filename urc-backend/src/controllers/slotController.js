@@ -16,7 +16,7 @@ exports.getSlots = async (req, res) => {
 
 exports.createSlot = async (req, res) => {
   try {
-    const { date, time, capacity } = req.body;
+    const { date, time, capacity, disabled, holiday } = req.body;
 
     if (!date || !time || !capacity) {
       return res.status(400).json({ message: "date, time, and capacity required" });
@@ -40,6 +40,8 @@ exports.createSlot = async (req, res) => {
         time,
         capacity: parseInt(capacity),
         booked: 0,
+        disabled: disabled === true,
+        holiday: holiday === true,
       },
     });
 

@@ -1,6 +1,6 @@
 import { useApp } from "./context";
 
-export default function UserDashboard({ onNav, lang, t }: any) {
+export default function UserDashboard({ onNav, t }: any) {
   const { currentUser, bookings, slots, notices } = useApp();
 
   const my = bookings.filter((b: any) => b.userId === currentUser.id);
@@ -21,7 +21,7 @@ export default function UserDashboard({ onNav, lang, t }: any) {
           color: "var(--text)",
         }}
       >
-        Welcome, {currentUser.name.split(" ")[0]}
+        {t.welcomeMsg}, {currentUser.name.split(" ")[0]}
       </h1>
       <p
         style={{
@@ -30,7 +30,7 @@ export default function UserDashboard({ onNav, lang, t }: any) {
           fontSize: 14,
         }}
       >
-        4213 URC NCC Group, Kurnool
+        {t.unit}
       </p>
 
       <div
@@ -53,11 +53,11 @@ export default function UserDashboard({ onNav, lang, t }: any) {
             textTransform: "uppercase",
           }}
         >
-          Notice Board
+          {t.noticeBoard}
         </div>
         {notices.length === 0 ? (
           <div style={{ fontSize: 13, color: "var(--muted)" }}>
-            No notices posted yet.
+            {t.noNoticesYet}.
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
@@ -105,14 +105,14 @@ export default function UserDashboard({ onNav, lang, t }: any) {
         }}
       >
         {[
-          { l: "Total Bookings", v: my.length, i: "Booking", c: "#1F3D2B" },
+          { l: t.totalBookings, v: my.length, i: "Booking", c: "#1F3D2B" },
           {
-            l: "Active Tokens",
+            l: t.activeTokens,
             v: my.filter((b: any) => b.status === "active").length,
             i: "Tokens",
             c: "#065f46",
           },
-          { l: "Available Today", v: avail, i: "Timing", c: "#92400e" },
+          { l: t.availableToday, v: avail, i: "Timing", c: "#92400e" },
         ].map((s: any) => (
           <div
             key={s.l}
@@ -156,7 +156,7 @@ export default function UserDashboard({ onNav, lang, t }: any) {
               textTransform: "uppercase",
             }}
           >
-            Upcoming Booking
+            {t.upcomingBooking}
           </div>
           <div style={{ fontSize: 19, fontWeight: 700, marginBottom: 4 }}>
             {up.category}
@@ -168,7 +168,7 @@ export default function UserDashboard({ onNav, lang, t }: any) {
               marginBottom: 3,
             }}
           >
-            Date: {up.date} | Time: {up.time}
+            {t.date}: {up.date} | {t.time}: {up.time}
           </div>
           <div
             style={{
@@ -177,7 +177,7 @@ export default function UserDashboard({ onNav, lang, t }: any) {
               marginBottom: 13,
             }}
           >
-            Token: {up.tokenNo}
+            {t.token}: {up.tokenNo}
           </div>
           <button
             onClick={() => onNav("bookings")}
@@ -193,7 +193,7 @@ export default function UserDashboard({ onNav, lang, t }: any) {
               fontFamily: "'DM Sans',sans-serif",
             }}
           >
-            View Token
+            {t.viewToken}
           </button>
         </div>
       ) : (
@@ -216,12 +216,12 @@ export default function UserDashboard({ onNav, lang, t }: any) {
               marginBottom: 4,
             }}
           >
-            No upcoming bookings
+            {t.noUpcomingBookings}
           </div>
           <div
             style={{ color: "var(--muted)", fontSize: 13, marginBottom: 16 }}
           >
-            Book a slot to visit the canteen
+            {t.bookSlotToVisit}
           </div>
           <button
             onClick={() => onNav("book")}

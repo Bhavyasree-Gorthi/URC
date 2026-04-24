@@ -14,6 +14,8 @@ model User {
   email              String              @unique @db.VarChar(255)
   passwordHash       String
   regiment           String              @db.VarChar(100)
+  cardId             String?             @db.VarChar(50)
+  allowedCategory    UserBookingAccess   @default(BOTH)
   phone              String?             @db.VarChar(20)
   role               Role                @default(USER)
   status             UserStatus          @default(PENDING)
@@ -139,6 +141,12 @@ enum Category {
   GROCERY
   LIQUOR_ONLY
   GROCERY_AND_LIQUOR
+}
+
+enum UserBookingAccess {
+  GROCERY_ONLY
+  LIQUOR_ONLY
+  BOTH
 }
 
 enum BookingStatus {

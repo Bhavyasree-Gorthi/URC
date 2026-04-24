@@ -6,8 +6,11 @@ exports.getUsers = async (req, res) => {
       id: true,
       name: true,
       email: true,
+      regiment: true,
+      cardId: true,
       role: true,
       status: true,
+      allowedCategory: true,
     },
   });
 
@@ -17,24 +20,44 @@ exports.getUsers = async (req, res) => {
 exports.updateUserStatus = async (req, res) => {
   try {
     const { userId } = req.params;
-    let { status } = req.body;
+    let { status, allowedCategory } = req.body;
     
-    if (!userId || !status) {
-      return res.status(400).json({ message: "userId and status required" });
+    if (!userId || (status === undefined && allowedCategory === undefined)) {
+      return res.status(400).json({ message: "userId and at least one update field required" });
     }
 
-    // Convert to uppercase for consistency with Prisma enum
-    status = status.toUpperCase();
+    const data = {};
 
-    const validStatuses = ["PENDING", "ACTIVE", "DISABLED", "SUSPENDED"];
-    if (!validStatuses.includes(status)) {
-      return res.status(400).json({ message: "Invalid status" });
+    if (status !== undefined) {
+      status = status.toUpperCase();
+      const validStatuses = ["PENDING", "ACTIVE", "DISABLED", "SUSPENDED"];
+      if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: "Invalid status" });
+      }
+      data.status = status;
+    }
+
+    if (allowedCategory !== undefined) {
+      allowedCategory = allowedCategory.toUpperCase();
+      const validCategories = ["GROCERY_ONLY", "LIQUOR_ONLY", "BOTH"];
+      if (!validCategories.includes(allowedCategory)) {
+        return res.status(400).json({ message: "Invalid allowed category" });
+      }
+      data.allowedCategory = allowedCategory;
     }
 
     const user = await prisma.user.update({
       where: { id: userId },
-      data: { status },
-      select: { id: true, name: true, email: true, status: true }
+      data,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        regiment: true,
+        cardId: true,
+        status: true,
+        allowedCategory: true,
+      }
     });
 
     res.json({ success: true, user });
