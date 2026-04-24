@@ -978,7 +978,7 @@ function AuthScreen({ mode, onLogin, onBack, lang, setLang }: any) {
                 <button onClick={doLogin} disabled={loading} style={{ width: "100%", padding: "14px", background: isAdmin ? "linear-gradient(135deg,#92400e,#b45309)" : "linear-gradient(135deg,#1F3D2B,#2d5a3d)", border: "none", borderRadius: 12, color: "#fff", fontSize: 15, fontWeight: 700, cursor: "pointer", fontFamily: "'DM Sans',sans-serif" }}>
                   {loading ? "Verifying…" : t.login}
                 </button>
-                <p style={{ textAlign: "center", fontSize: 11, color: "#aaa", marginTop: 14 }}>{isAdmin ? "Use an account with admin role." : "Demo: suresh@urc.in / user123"}</p>
+                <p style={{ textAlign: "center", fontSize: 11, color: "#aaa", marginTop: 14 }}>{isAdmin ? "Use an account with admin role." : ""}</p>
               </>
             )}
             {tab === "register" && !isAdmin && (
