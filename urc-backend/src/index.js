@@ -13,8 +13,16 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      // Allow exact matches
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // ✅ Allow ALL Vercel deployments
+      if (origin.includes("vercel.app")) {
         return callback(null, true);
       }
 
@@ -22,6 +30,7 @@ app.use(
     },
     methods: ["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true,
   })
 );
 app.use(express.json());
