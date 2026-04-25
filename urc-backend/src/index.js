@@ -41,16 +41,19 @@ const slotRoutes = require("./routes/slots");
 const bookingRoutes = require("./routes/bookings");
 const noticeRoutes = require("./routes/notices");
 
-// ✅ ONLY API routes
+// API routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/slots", slotRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/notices", noticeRoutes);
 
-// Root test
 app.get("/", (req, res) => {
-  res.send("Backend Running ✅");
+  res.send("Backend Running");
+});
+
+app.get("/api/health", (req, res) => {
+  res.json({ ok: true });
 });
 
 // 404 handler (helps debugging)
@@ -63,5 +66,5 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () =>
-  console.log(`🚀 Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 );
