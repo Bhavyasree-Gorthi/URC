@@ -477,11 +477,12 @@ export default function AdminDashboard({ lang, onNav }: any) {
 export function AdminSlots() {
   const { slots, updateSlots, updateUsers, updateBookings, showToast } = useApp();
   const todayStr = new Date().toISOString().split("T")[0];
-  const [selDate, setSelDate] = useState(todayStr);
+  const tomorrowStr = new Date(new Date().getTime() + 86400000).toISOString().split("T")[0];
+  const [selDate, setSelDate] = useState(tomorrowStr);
   const [editSlot, setEditSlot] = useState<any>(null);
   const [newCap, setNewCap] = useState("");
   const [showAddDateForm, setShowAddDateForm] = useState(false);
-  const [newDate, setNewDate] = useState(todayStr);
+  const [newDate, setNewDate] = useState(tomorrowStr);
 
   const doRefresh = useCallback(async () => {
     await refreshAll(updateSlots, updateUsers, updateBookings);
@@ -491,8 +492,8 @@ export function AdminSlots() {
 
   // Get all unique dates from existing slots
   const existingDates = [...new Set(slots.map((s: any) => nd(s.date)).filter(Boolean))] as string[];
-  const activeDates = existingDates.filter((date) => date >= todayStr);
-  const allDates = [...new Set([...activeDates, normalizedSelDate].filter((date) => date >= todayStr))].sort().slice(0, 30);
+  const activeDates = existingDates.filter((date) => date > todayStr);
+  const allDates = [...new Set([...activeDates, normalizedSelDate].filter((date) => date > todayStr))].sort().slice(0, 30);
   
   // Get slots for selected date
   const dSlots = slots.filter((s: any) => nd(s.date) === normalizedSelDate).sort((a: any, b: any) => {
@@ -534,8 +535,8 @@ export function AdminSlots() {
       return;
     }
     const normalizedNewDate = nd(newDate);
-    if (normalizedNewDate < todayStr) {
-      showToast("Cannot add slots for past dates", "error");
+    if (normalizedNewDate <= todayStr) {
+      showToast("Can only add slots for future dates", "error");
       return;
     }
     
@@ -1016,7 +1017,7 @@ export function AdminSlots() {
               type="date"
               value={newDate}
               onChange={(e: any) => setNewDate(e.target.value)}
-              min={todayStr}
+              min={tomorrowStr}
               style={{
                 width: "100%",
                 padding: "11px 13px",
@@ -1077,6 +1078,7 @@ export function AdminSlots() {
 export function AdminTokens() {
   const { bookings: rawBookings, updateSlots, updateUsers, updateBookings, showToast } = useApp();
   const [filter, setFilter] = useState("active");
+  const [searchQuery, setSearchQuery] = useState("");
   const isCompact = useIsMobileScreen(980);
 
   const doRefresh = useCallback(async () => {
@@ -1097,7 +1099,55 @@ export function AdminTokens() {
 
   const activeBookings = bookings.filter((b: any) => b.status === "active");
   const completedBookings = bookings.filter((b: any) => b.status === "completed");
-  const visibleBookings = filter === "active" ? activeBookings : completedBookings;
+  
+  // Filter by search query (name, email, card ID)
+  const filterBySearch = (bookingList: any[]) => {
+    if (!searchQuery.trim()) return bookingList;
+    const query = searchQuery.toLowerCase();
+    return bookingList.filter((b: any) => {
+      const name = (b.user?.name || "").toLowerCase();
+      const email = (b.user?.email || "").toLowerCase();
+      const cardId = (b.user?.cardId || "").toLowerCase();
+      const token = (b.tokenNo || "").toLowerCase();
+      return name.includes(query) || email.includes(query) || cardId.includes(query) || token.includes(query);
+    });
+  };
+
+  const filteredActive = filterBySearch(activeBookings);
+  const filteredCompleted = filterBySearch(completedBookings);
+  const visibleBookings = filter === "active" ? filteredActive : filteredCompleted;
+
+  // PDF Download function
+  const downloadPDF = (tokenList: any[], fileName: string) => {
+    if (tokenList.length === 0) {
+      showToast("No tokens to download", "warning");
+      return;
+    }
+
+    // Create CSV content
+    let csv = "Name,Email,Card ID,Date,Time,Category,Token,Status\n";
+    tokenList.forEach((b: any) => {
+      const name = `"${b.user?.name || ""}"`;
+      const email = `"${b.user?.email || ""}"`;
+      const cardId = b.user?.cardId || "";
+      const date = b.date || "";
+      const time = b.time || "";
+      const category = b.category || "";
+      const token = b.tokenNo || "";
+      const status = b.status || "";
+      csv += `${name},${email},${cardId},${date},${time},${category},${token},${status}\n`;
+    });
+
+    // Create and download file
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csv));
+    element.setAttribute("download", `${fileName}_${new Date().toISOString().split("T")[0]}.csv`);
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    showToast(`Downloaded ${tokenList.length} ${fileName.toLowerCase()}`, "success");
+  };
 
   const markCompleted = async (bookingId: string) => {
     try {
@@ -1110,16 +1160,60 @@ export function AdminTokens() {
   };
 
   return (
-    <div>
-      <h1 style={{ fontSize: 23, fontWeight: 800, margin: "0 0 4px", color: "var(--text)" }}>Token Manager</h1>
-      <p style={{ color: "var(--muted)", margin: "0 0 20px", fontSize: 13 }}>
-        Active tokens stay visible until completed by admin or until 5:00 PM on the booked date.
-      </p>
+    <div style={{ width: "100%", minWidth: 0 }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20, marginBottom: 24, flexWrap: isCompact ? "wrap" : "nowrap" }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1 style={{ fontSize: 23, fontWeight: 800, margin: "0 0 4px", color: "var(--text)" }}>Token Manager</h1>
+          <p style={{ color: "var(--muted)", margin: "0", fontSize: 13 }}>
+            Active tokens stay visible until completed by admin or until 5:00 PM on the booked date.
+          </p>
+        </div>
+        <button
+          onClick={() => downloadPDF(filter === "active" ? filteredActive : filteredCompleted, filter === "active" ? "ActiveTokens" : "CompletedTokens")}
+          style={{
+            background: "#1F3D2B",
+            color: "#fff",
+            border: "none",
+            borderRadius: 10,
+            padding: "10px 16px",
+            cursor: "pointer",
+            fontFamily: "'DM Sans',sans-serif",
+            fontWeight: 600,
+            fontSize: 12,
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}
+        >
+          📥 Download {filter === "active" ? "Active" : "Completed"} Tokens
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      <div style={{ marginBottom: 18, width: "100%" }}>
+        <input
+          type="text"
+          placeholder="🔍 Search by name, email, card ID, or token number..."
+          value={searchQuery}
+          onChange={(e: any) => setSearchQuery(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "12px 14px",
+            border: "2px solid var(--border)",
+            borderRadius: 12,
+            fontSize: 14,
+            outline: "none",
+            color: "var(--text)",
+            background: "var(--bg)",
+            fontFamily: "'DM Sans',sans-serif",
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
 
       <div style={{ display: "flex", gap: 10, marginBottom: 18, flexWrap: "wrap" }}>
         {[
-          { id: "active", label: `Active Tokens (${activeBookings.length})` },
-          { id: "completed", label: `Completed Tokens (${completedBookings.length})` },
+          { id: "active", label: `Active Tokens (${filteredActive.length})` },
+          { id: "completed", label: `Completed Tokens (${filteredCompleted.length})` },
         ].map((tab) => (
           <button
             key={tab.id}

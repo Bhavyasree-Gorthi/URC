@@ -1648,14 +1648,14 @@ export default function App() {
     ]);
 
     if (slotsResult.status === "fulfilled") {
-      setSlots(slotsResult.value.data.data);
+      setSlots(slotsResult.value.data.data || slotsResult.value.data);
     } else {
       const err: any = slotsResult.reason;
       console.error("Slots fetch error", err?.response?.status, err?.message);
     }
 
     if (noticesResult.status === "fulfilled") {
-      setNotices(noticesResult.value.data.data);
+      setNotices(noticesResult.value.data.data || noticesResult.value.data);
     } else {
       const err: any = noticesResult.reason;
       console.error("Notices fetch error", err?.response?.status, err?.message);
@@ -1671,7 +1671,8 @@ export default function App() {
 
     const bookingsResult: any = authRequests[0];
     if (bookingsResult?.status === "fulfilled") {
-      setBookings(bookingsResult.value.data.data.map(normalizeBooking));
+      const bookingsData = bookingsResult.value.data?.data || bookingsResult.value.data || [];
+      setBookings(bookingsData.map(normalizeBooking));
     } else {
       const err: any = bookingsResult?.reason;
       if (err?.response?.status === 401 || err?.response?.status === 403) {
@@ -1683,7 +1684,8 @@ export default function App() {
     if (isAdminToken && authRequests[1]) {
       const usersResult: any = authRequests[1];
       if (usersResult.status === "fulfilled") {
-        setUsers(usersResult.value.data.data);
+        const usersData = usersResult.value.data?.data || usersResult.value.data || [];
+        setUsers(usersData);
       } else {
         const err: any = usersResult.reason;
         console.error("Users fetch error", err?.response?.status);

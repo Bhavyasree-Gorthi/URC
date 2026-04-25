@@ -1,20 +1,28 @@
 const prisma = require("../config/prisma");
 
 exports.getUsers = async (req, res) => {
-  const users = await prisma.user.findMany({
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      regiment: true,
-      cardId: true,
-      role: true,
-      status: true,
-      allowedCategory: true,
-    },
-  });
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        regiment: true,
+        cardId: true,
+        role: true,
+        status: true,
+        allowedCategory: true,
+      },
+    });
 
-  res.json({ success: true, data: users });
+    res.json({ success: true, data: users });
+  } catch (err) {
+    if (err?.code === "P1001") {
+      return res.status(503).json({ message: "Database connection unavailable" });
+    }
+    console.error("GET USERS ERROR:", err);
+    res.status(500).json({ error: err.message });
+  }
 };
 
 exports.updateUserStatus = async (req, res) => {

@@ -17,6 +17,15 @@ const mailTransport = nodemailer.createTransport({
   },
 });
 
+// Test email connection
+mailTransport.verify((error, success) => {
+  if (error) {
+    console.error("❌ Email transport error:", error.message);
+  } else {
+    console.log("✅ Email service ready");
+  }
+});
+
 const defaultMailFrom = process.env.EMAIL_USER
   ? `"No Reply - URC NCC Canteen" <${process.env.EMAIL_USER}>`
   : '"No Reply - URC NCC Canteen"';
@@ -165,9 +174,14 @@ exports.forgotPassword = async (req, res) => {
       text: `Reset your password using this link: ${resetUrl}`,
     });
 
+    console.log("✅ Reset email sent to:", user.email);
+
     res.json({ success: true, message: genericMessage });
   } catch (err) {
-    console.error("FORGOT PASSWORD ERROR:", err);
+    console.error("❌ FORGOT PASSWORD ERROR:", err.message);
+    if (err.response) {
+      console.error("📧 Email error details:", err.response);
+    }
     res.status(500).json({ error: err.message });
   }
 };

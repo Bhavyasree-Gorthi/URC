@@ -65,6 +65,20 @@ app.use((req, res) => {
 });
 
 const PORT = process.env.PORT || 3001;
-app.listen(PORT, () =>
+const server = app.listen(PORT, () =>
   console.log(`Server running on port ${PORT}`)
 );
+
+// Handle port-in-use error gracefully
+server.on("error", (err) => {
+  if (err.code === "EADDRINUSE") {
+    console.error(`❌ Port ${PORT} is already in use. Kill the process and retry.`);
+    process.exit(1);
+  } else {
+    throw err;
+  }
+});
+
+// Clean shutdown on Ctrl+C / nodemon restart
+process.on("SIGTERM", () => server.close());
+process.on("SIGINT", () => server.close());

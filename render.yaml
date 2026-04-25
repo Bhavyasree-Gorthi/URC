@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: urc-canteen-backend
-    runtime: node
-    rootDir: urc-backend
-    plan: free
-    buildCommand: npm install && npx prisma generate && npm run db:deploy
-    startCommand: npm start
-    healthCheckPath: /api/health
