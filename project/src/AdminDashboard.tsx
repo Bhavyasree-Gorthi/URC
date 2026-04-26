@@ -75,9 +75,9 @@ async function refreshAll(
 ) {
   try {
     const [sRes, bRes, uRes] = await Promise.all([API.get("/slots"), API.get("/bookings"), API.get("/users")]);
-    updateSlots(sRes.data.data);
-    updateBookings(bRes.data.data);
-    updateUsers(uRes.data.data);
+    updateSlots(sRes.data?.data || sRes.data || []);
+    updateBookings(bRes.data?.data || bRes.data || []);
+    updateUsers(uRes.data?.data || uRes.data || []);
   } catch (e) {
     console.error("refreshAll failed", e);
   }
@@ -1160,8 +1160,8 @@ export function AdminTokens() {
   };
 
   return (
-    <div style={{ width: "100%", minWidth: 0 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20, marginBottom: 24, flexWrap: isCompact ? "wrap" : "nowrap" }}>
+    <div style={{ width: "100%", minWidth: 0, position: "relative" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20, marginBottom: 24, flexWrap: isCompact ? "wrap" : "nowrap", position: "relative", zIndex: 10 }}>
         <div style={{ flex: 1, minWidth: 0 }}>
           <h1 style={{ fontSize: 23, fontWeight: 800, margin: "0 0 4px", color: "var(--text)" }}>Token Manager</h1>
           <p style={{ color: "var(--muted)", margin: "0", fontSize: 13 }}>
@@ -1182,6 +1182,9 @@ export function AdminTokens() {
             fontSize: 12,
             whiteSpace: "nowrap",
             flexShrink: 0,
+            position: "relative",
+            visibility: "visible",
+            display: "block",
           }}
         >
           📥 Download {filter === "active" ? "Active" : "Completed"} Tokens
@@ -1189,7 +1192,7 @@ export function AdminTokens() {
       </div>
 
       {/* Search Bar */}
-      <div style={{ marginBottom: 18, width: "100%" }}>
+      <div style={{ marginBottom: 18, width: "100%", position: "relative", zIndex: 10, visibility: "visible", display: "block" }}>
         <input
           type="text"
           placeholder="🔍 Search by name, email, card ID, or token number..."
@@ -1206,6 +1209,9 @@ export function AdminTokens() {
             background: "var(--bg)",
             fontFamily: "'DM Sans',sans-serif",
             boxSizing: "border-box",
+            position: "relative",
+            visibility: "visible",
+            display: "block",
           }}
         />
       </div>
@@ -1585,12 +1591,62 @@ function AccessDropdown({ user, onDone }: { user: any; onDone: () => void }) {
 // Admin can approve pending users, disable/enable accounts.
 // ─────────────────────────────────────────────
 export function AdminUsers() {
-  const { users, updateSlots, updateUsers, updateBookings, showToast } = useApp();
+  const { users: rawUsers, updateSlots, updateUsers, updateBookings, showToast } = useApp();
   const isCompact = useIsMobileScreen(920);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const doRefresh = useCallback(async () => {
     await refreshAll(updateSlots, updateUsers, updateBookings);
   }, [updateSlots, updateUsers, updateBookings]);
+
+  const users = rawUsers.map((u: any) => ({
+    ...u,
+    status: ns(u.status),
+  }));
+
+  // Filter by search query (name, email, card ID, regiment)
+  const filterBySearch = (userList: any[]) => {
+    if (!searchQuery.trim()) return userList;
+    const query = searchQuery.toLowerCase();
+    return userList.filter((u: any) => {
+      const name = (u.name || "").toLowerCase();
+      const email = (u.email || "").toLowerCase();
+      const cardId = (u.cardId || "").toLowerCase();
+      const regiment = (u.regiment || "").toLowerCase();
+      return name.includes(query) || email.includes(query) || cardId.includes(query) || regiment.includes(query);
+    });
+  };
+
+  const filteredUsers = filterBySearch(users);
+
+  // CSV Download function
+  const downloadUserListCSV = () => {
+    if (filteredUsers.length === 0) {
+      showToast("No users to download", "warning");
+      return;
+    }
+
+    let csv = "Name,Email,Regiment,Card ID,Role,Status,Booking Access\n";
+    filteredUsers.forEach((u: any) => {
+      const name = `"${u.name || ""}"`;
+      const email = `"${u.email || ""}"`;
+      const regiment = `"${u.regiment || ""}"`;
+      const cardId = u.cardId || "";
+      const role = u.role || "";
+      const status = u.status || "";
+      const access = userAllowedCategoryLabel(u.allowedCategory);
+      csv += `${name},${email},${regiment},${cardId},${role},${status},${access}\n`;
+    });
+
+    const element = document.createElement("a");
+    element.setAttribute("href", "data:text/csv;charset=utf-8," + encodeURIComponent(csv));
+    element.setAttribute("download", `UserList_${new Date().toISOString().split("T")[0]}.csv`);
+    element.style.display = "none";
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+    showToast(`Downloaded ${filteredUsers.length} users`, "success");
+  };
 
   const quickApprove = async (u: any) => {
     try {
@@ -1624,19 +1680,63 @@ export function AdminUsers() {
 
   return (
     <div>
-      <h1
-        style={{
-          fontSize: 23,
-          fontWeight: 800,
-          margin: "0 0 4px",
-          color: "var(--text)",
-        }}
-      >
-        User Manager
-      </h1>
-      <p style={{ color: "var(--muted)", margin: "0 0 20px", fontSize: 13 }}>
-        Approve, disable, and manage members
-      </p>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 20, marginBottom: 20, flexWrap: isCompact ? "wrap" : "nowrap" }}>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h1
+            style={{
+              fontSize: 23,
+              fontWeight: 800,
+              margin: "0 0 4px",
+              color: "var(--text)",
+            }}
+          >
+            User Manager
+          </h1>
+          <p style={{ color: "var(--muted)", margin: "0", fontSize: 13 }}>
+            Approve, disable, and manage members
+          </p>
+        </div>
+        <button
+          onClick={downloadUserListCSV}
+          style={{
+            background: "#1F3D2B",
+            color: "#fff",
+            border: "none",
+            borderRadius: 10,
+            padding: "10px 16px",
+            cursor: "pointer",
+            fontFamily: "'DM Sans',sans-serif",
+            fontWeight: 600,
+            fontSize: 12,
+            whiteSpace: "nowrap",
+            flexShrink: 0,
+          }}
+        >
+          📥 Download Users
+        </button>
+      </div>
+
+      {/* Search Bar */}
+      <div style={{ marginBottom: 18, width: "100%" }}>
+        <input
+          type="text"
+          placeholder="🔍 Search by name, email, card ID, or regiment..."
+          value={searchQuery}
+          onChange={(e: any) => setSearchQuery(e.target.value)}
+          style={{
+            width: "100%",
+            padding: "12px 14px",
+            border: "2px solid var(--border)",
+            borderRadius: 12,
+            fontSize: 14,
+            outline: "none",
+            color: "var(--text)",
+            background: "var(--bg)",
+            fontFamily: "'DM Sans',sans-serif",
+            boxSizing: "border-box",
+          }}
+        />
+      </div>
       <div
         style={{
           background: "var(--card)",
@@ -1647,7 +1747,7 @@ export function AdminUsers() {
       >
         {isCompact ? (
           <div style={{ display: "flex", flexDirection: "column", gap: 12, padding: 12 }}>
-            {users.map((u: any) => {
+            {filteredUsers.map((u: any) => {
               const sc: any = (
                 {
                   active: { bg: "#dcfce7", tx: "#166534" },
@@ -1836,7 +1936,7 @@ export function AdminUsers() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((u: any, i: any) => {
+                {filteredUsers.map((u: any, i: any) => {
                   const sc: any = (
                     {
                       active: { bg: "#dcfce7", tx: "#166534" },
@@ -1849,7 +1949,7 @@ export function AdminUsers() {
                       key={u.id}
                       style={{
                         borderBottom:
-                          i < users.length - 1
+                          i < filteredUsers.length - 1
                             ? "1px solid var(--border)"
                             : "none",
                       }}

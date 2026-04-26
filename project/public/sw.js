@@ -1,38 +1,44 @@
-const CACHE_NAME = "urc-ncc-pwa-v1";
-const APP_SHELL = ["/", "/manifest.webmanifest", "/pwa-icon.svg", "/pwa-maskable.svg", "/image.png"];
+const CACHE_NAME = "urc-ncc-pwa-v2";
 
-self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)).then(() => self.skipWaiting())
-  );
+self.addEventListener("install", () => {
+  self.skipWaiting();
 });
 
-self.addEventListener("activate", (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key)))
-    ).then(() => self.clients.claim())
-  );
+self.addEventListener("activate", () => {
+  self.clients.claim();
 });
 
 self.addEventListener("fetch", (event) => {
-  if (event.request.method !== "GET") return;
+  const { request } = event;
+  
+  // Skip non-GET requests
+  if (request.method !== "GET") return;
 
-  event.respondWith(
-    caches.match(event.request).then((cached) => {
-      if (cached) return cached;
+  // Skip dev server requests
+  if (request.url.includes("localhost") || request.url.includes("127.0.0.1")) {
+    return;
+  }
 
-      return fetch(event.request)
+  // Network first for API calls
+  if (request.url.includes("/api/")) {
+    event.respondWith(
+      fetch(request)
         .then((response) => {
-          if (!response || response.status !== 200 || response.type !== "basic") {
-            return response;
+          if (response?.status === 200) {
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
           }
-
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
           return response;
         })
-        .catch(() => caches.match("/"));
-    })
+        .catch(() => caches.match(request))
+    );
+    return;
+  }
+
+  // Cache first for static assets
+  event.respondWith(
+    caches.match(request)
+      .then((cached) => cached || fetch(request))
+      .catch(() => null)
   );
 });
+

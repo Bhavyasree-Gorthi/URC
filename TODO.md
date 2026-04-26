@@ -1,21 +1,15 @@
-# Fix Plan
+# Translation Fix TODO
 
-## Issue 1: Frontend — `bookingsResult.value.data.data is undefined`
-**File:** `project/src/App.tsx` (~line 1674)
-- `fetchData()` accesses `bookingsResult.value.data.data.map(...)` without null-safety fallback.
-- Same issue exists for users data.
-- **Fix:** Add defensive fallback: `(bookingsResult.value.data?.data || bookingsResult.value.data || []).map(...)`
-
-## Issue 2: Backend — `prepared statement "s3" does not exist` + userController crash
-**Files:** `urc-backend/src/config/prisma.js`, `urc-backend/src/controllers/userController.js`
-- PostgreSQL connection pooler (PgBouncer/Supabase) in transaction mode doesn't persist prepared statements across connections.
-- Prisma default behavior uses prepared statements.
-- **Fix A (prisma.js):** Append `pgbouncer=true` query param to the connection URL passed to PrismaClient, which tells Prisma to disable prepared statements.
-- **Fix B (userController.js):** Wrap `getUsers` in try-catch so Prisma errors return 500 JSON instead of crashing the Node.js process.
+## Goal
+Ensure all user dashboard text translates correctly when language is switched to Telugu (or any supported language).
 
 ## Steps
-1. [x] Fix `project/src/App.tsx` — defensive data access for bookings & users.
-2. [x] Fix `urc-backend/src/config/prisma.js` — add `pgbouncer=true` support.
-3. [x] Fix `urc-backend/src/controllers/userController.js` — add try-catch to `getUsers`.
-4. [x] Verify fixes compile/syntax is correct.
+- [ ] Step 1: Add missing translation keys to `T` object in `App.tsx` (all 4 languages: en, hi, te, ta)
+- [ ] Step 2: Pass `t` prop to `BookSlot`, `MyBookings`, `UserProfile` in `App.tsx` page map
+- [ ] Step 3: Update `UserDashboard.tsx` to translate `up.category` using `t`
+- [ ] Step 4: Update `MyBookings` in `App.tsx` to use `t` for all hardcoded strings + translate category/status
+- [ ] Step 5: Update `UserProfile` in `App.tsx` to use `t` for labels and title
+- [ ] Step 6: Update `BookSlot` in `App.tsx` to use `t` for categories, calendar, slot status, confirmation, success
+- [ ] Step 7: Update `UserSidebar` in `App.tsx` to translate "Sign Out"
+- [ ] Step 8: Build/test to verify translations
 
