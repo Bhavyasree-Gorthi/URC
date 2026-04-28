@@ -105,14 +105,14 @@ export default function UserDashboard({ onNav, t }: any) {
         }}
       >
         {[
-          { l: t.totalBookings, v: my.length, i: "Booking", c: "#1F3D2B" },
+          { l: t.totalBookings, v: my.length, i: t.bookingLabel, c: "#1F3D2B" },
           {
             l: t.activeTokens,
             v: my.filter((b: any) => b.status === "active").length,
-            i: "Tokens",
+            i: t.tokensLabel,
             c: "#065f46",
           },
-          { l: t.availableToday, v: avail, i: "Timing", c: "#92400e" },
+          { l: t.availableToday, v: avail, i: t.timingLabel, c: "#92400e" },
         ].map((s: any) => (
           <div
             key={s.l}

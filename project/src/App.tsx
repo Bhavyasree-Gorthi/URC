@@ -28,12 +28,10 @@ type BeforeInstallPromptEvent = Event & {
 
 // ── Translations ──────────────────────────────────────────────────────────────
 const T = {
-  en: { welcome:"WELCOME TO",unit:"4213 URC NCC GROUP, KURNOOL",tagline:"Book Your E-Slots Here",motto:"Unity and Discipline",nonMemberNote:"Non-Members are only allowed to book Grocery.",servingNote:"All Serving Personnel are requested to contact OIC/Canteen manager for drawl of liquor with Leave Certificate.",grocery:"GROCERY",liquor:"LIQUOR",both:"BOTH",myBookings:"MY BOOKINGS / CANCEL",downloadApp:"DOWNLOAD APP",myProfile:"MY PROFILE",liquorNote:"Note: Only URC NCC Group registered customers can book Liquor",aboutUs:"ABOUT US",aboutText:"Chairman, and all Staff members of URC GP HQ are constantly striving hard to provide utmost satisfaction to Veterans, War Widows, and Serving Pers by ensuring all variety of brands are made available be it Grocery or Liquor items. Our singular aim is to provide utmost satisfaction to our esteemed customers.",signIn:"Sign In",register:"Register",forgotPwd:"Forgot Password",email:"Email Address",password:"Password",name:"Your Name",choosePwd:"Choose a Password",rememberMe:"Remember Me",login:"Log In",bookSlot:"Book Slot",dashboard:"Dashboard",cancel:"Cancel",viewToken:"View Token",confirmBooking:"Confirm Booking",selectCategory:"Category",selectDate:"Select Date",selectTime:"Select Time",spotsLeft:"spots left",full:"Full",holiday:"Holiday",active:"Active",completed:"Completed",cancelled:"Cancelled",bookingSuccess:"Booking confirmed! 🎉",cancelSuccess:"Booking cancelled",onePerDay:"You already have a booking on this date!",adminLogin:"Admin Login",userLogin:"User Login",allBookings:"All Bookings",slotManager:"Slot Manager",userManager:"User Manager",overview:"Overview",welcomeMsg:"Welcome",noticeBoard:"Notice Board",noNoticesYet:"No notices posted yet",totalBookings:"Total Bookings",activeTokens:"Active Tokens",availableToday:"Available Today",upcomingBooking:"Upcoming Booking",date:"Date",time:"Time",token:"Token",noUpcomingBookings:"No upcoming bookings",bookSlotToVisit:"Book a slot to visit the canteen",adminOverview:"Admin Overview",realTimeMetrics:"Real-time system metrics for 4213 URC NCC",postUpdates:"Post updates that all users can see on their dashboard",postAnnouncement:"Post an announcement for users",postNotice:"Post Notice",todaysBookings:"Today's Bookings",totalUsers:"Total Users",pendingApproval:"Pending Approval",todaysSlotFillRate:"Today's Slot Fill Rate",bookingsByCategory:"Bookings by Category",groceryOnly:"Grocery",liquorOnly:"Liquor Only",groceryAndLiquor:"Grocery + Liquor",usersWithActiveBookings:"Users who currently have active bookings",show:"Show",hide:"Hide",language:"LANGUAGE",kurnool:"Kurnool",nccGroup:"4213 URC NCC",remove:"Remove",filled:"filled",notice:"notice",notices:"notices",myBookingsTitle:"My Bookings",canteenSlotHistory:"Your canteen slot history",noBookingsFound:"No bookings found",bookingsAppearHere:"Bookings appear here once created",entryToken:"ENTRY TOKEN",showAtGate:"Show at gate",all:"All",signOut:"Sign Out",statusActive:"ACTIVE",regimentLabel:"Regiment",cardIdLabel:"Card ID",roleLabel:"Role",openToAll:"Open to all",registeredMembers:"Registered members",combined:"Combined",selectArrow:"Select →",noSlotsAdmin:"No slots have been added by admin yet. Please check back later.",pastDate:"Past date",noSlotsYet:"No slots added yet",holidayClosed:"Holiday / Closed",fullyBooked:"Fully booked",slotAvailable:"slot available",slotsAvailable:"slots available",limited:"Limited",timeOver:"TIME OVER",closed:"CLOSED",nameLabel:"Name",spotsAvailableLabel:"Spots Available",bookingConfirmedTitle:"Booking Confirmed!",viewTokenInBookings:"View your token in My Bookings",bookAnother:"Book Another",reserveCanteenSlot:"Reserve your canteen slot in a few steps",back:"Back" },
-  hi: { welcome:"स्वागत है",unit:"4213 यूआरसी एनसीसी ग्रुप, कुर्नूल",tagline:"यहाँ अपना ई-स्लॉट बुक करें",motto:"एकता और अनुशासन",nonMemberNote:"गैर-सदस्य केवल ग्रोसरी बुक कर सकते हैं।",servingNote:"सेवारत कर्मियों से अनुरोध है कि लिकर निकासी के लिए OIC/कैंटीन प्रबंधक से संपर्क करें।",grocery:"किराना",liquor:"शराब",both:"दोनों",myBookings:"मेरी बुकिंग / रद्द",downloadApp:"ऐप डाउनलोड",myProfile:"मेरी प्रोफ़ाइल",liquorNote:"नोट: केवल यूआरसी एनसीसी के पंजीकृत ग्राहक शराब बुक कर सकते हैं",aboutUs:"हमारे बारे में",aboutText:"अध्यक्ष और यूआरसी जीपी मुख्यालय के सभी कर्मचारी वीरों, युद्ध विधवाओं और सेवारत कर्मियों को किराना और शराब दोनों प्रकार की सभी ब्रांड उपलब्ध कराकर अधिकतम संतुष्टि प्रदान करने का प्रयास करते हैं।",signIn:"साइन इन",register:"पंजीकरण",forgotPwd:"पासवर्ड भूल गए",email:"ईमेल पता",password:"पासवर्ड",name:"आपका नाम",choosePwd:"पासवर्ड चुनें",rememberMe:"मुझे याद रखें",login:"लॉग इन",bookSlot:"स्लॉट बुक करें",dashboard:"डैशबोर्ड",cancel:"रद्द करें",viewToken:"टोकन देखें",confirmBooking:"बुकिंग की पुष्टि",selectCategory:"श्रेणी",selectDate:"तारीख चुनें",selectTime:"समय चुनें",spotsLeft:"स्थान शेष",full:"भरा",holiday:"छुट्टी",active:"सक्रिय",completed:"पूर्ण",cancelled:"रद्द",bookingSuccess:"बुकिंग सफल! 🎉",cancelSuccess:"बुकिंग रद्द हुई",onePerDay:"इस तारीख पर पहले से बुकिंग है!",adminLogin:"एडमिन लॉगिन",userLogin:"यूजर लॉगिन",allBookings:"सभी बुकिंग",slotManager:"स्लॉट प्रबंधक",userManager:"यूजर प्रबंधक",overview:"अवलोकन",welcomeMsg:"स्वागत है",noticeBoard:"सूचना बोर्ड",noNoticesYet:"अभी कोई सूचना पोस्ट नहीं की गई",totalBookings:"कुल बुकिंग",activeTokens:"सक्रिय टोकन",availableToday:"आज उपलब्ध",upcomingBooking:"आने वाली बुकिंग",date:"तारीख",time:"समय",token:"टोकन",noUpcomingBookings:"कोई आने वाली बुकिंग नहीं",bookSlotToVisit:"कैंटीन पर जाने के लिए स्लॉट बुक करें",adminOverview:"एडमिन अवलोकन",realTimeMetrics:"4213 यूआरसी एनसीसी के लिए रीयल-टाइम मेट्रिक्स",postUpdates:"अपडेट पोस्ट करें जो सभी उपयोगकर्ता अपने डैशबोर्ड पर देख सकें",postAnnouncement:"उपयोगकर्ताओं के लिए घोषणा पोस्ट करें",postNotice:"सूचना पोस्ट करें",todaysBookings:"आज की बुकिंग",totalUsers:"कुल उपयोगकर्ता",pendingApproval:"स्वीकृति के लिए लंबित",todaysSlotFillRate:"आज की स्लॉट भरण दर",bookingsByCategory:"श्रेणी के अनुसार बुकिंग",groceryOnly:"किराना",liquorOnly:"केवल शराब",groceryAndLiquor:"किराना + शराब",usersWithActiveBookings:"वे उपयोगकर्ता जिनके पास सक्रिय बुकिंग है",show:"दिखाएँ",hide:"छिपाएँ",language:"भाषा",kurnool:"कुर्नूल",nccGroup:"4213 यूआरसी एनसीसी",remove:"हटाएँ",filled:"भरा",notice:"सूचना",notices:"सूचनाएं",myBookingsTitle:"मेरी बुकिंग",canteenSlotHistory:"आपका कैंटीन स्लॉट इतिहास",noBookingsFound:"कोई बुकिंग नहीं मिली",bookingsAppearHere:"बुकिंग यहाँ दिखाई देंगी",entryToken:"प्रवेश टोकन",showAtGate:"गेट पर दिखाएँ",all:"सभी",signOut:"साइन आउट",statusActive:"सक्रिय",regimentLabel:"रेजिमेंट",cardIdLabel:"कार्ड आईडी",roleLabel:"भूमिका",openToAll:"सभी के लिए खुला",registeredMembers:"पंजीकृत सदस्य",combined:"संयुक्त",selectArrow:"चुनें →",noSlotsAdmin:"अभी तक कोई स्लॉट नहीं जोड़ा गया। बाद में देखें।",pastDate:"पिछली तारीख",noSlotsYet:"अभी तक कोई स्लॉट नहीं",holidayClosed:"छुट्टी / बंद",fullyBooked:"पूरी तरह बुक",slotAvailable:"स्लॉट उपलब्ध",slotsAvailable:"स्लॉट उपलब्ध",limited:"सीमित",timeOver:"समय समाप्त",closed:"बंद",nameLabel:"नाम",spotsAvailableLabel:"उपलब्ध स्थान",bookingConfirmedTitle:"बुकिंग की पुष्टि हो गई!",viewTokenInBookings:"मेरी बुकिंग में टोकन देखें",bookAnother:"और बुक करें",reserveCanteenSlot:"कुछ चरणों में अपना कैंटीन स्लॉट बुक करें",back:"वापस" },
-  te: { welcome:"స్వాగతం",unit:"4213 యూఆర్‌సీ ఎన్‌సీసీ గ్రూప్, కర్నూల్",tagline:"ఇక్కడ మీ ఇ-స్లాట్ బుక్ చేయండి",motto:"ఐక్యత మరియు క్రమశిక్షణ",nonMemberNote:"సభ్యులు కాని వారు కేవలం కిరాణా బుక్ చేయవచ్చు.",servingNote:"సేవలో ఉన్న సిబ్బంది మద్యం కోసం OIC/కాంటీన్ మేనేజర్‌ని సంప్రదించాలి.",grocery:"కిరాణా",liquor:"మద్యం",both:"రెండూ",myBookings:"నా బుకింగ్‌లు / రద్దు",downloadApp:"యాప్ డౌన్‌లోడ్",myProfile:"నా ప్రొఫైల్",liquorNote:"గమనిక: ఎన్‌సీసీ నమోదిత సభ్యులు మాత్రమే మద్యం బుక్ చేయవచ్చు",aboutUs:"మా గురించి",aboutText:"చైర్మన్ మరియు యూఆర్‌సీ జీపీ హెడ్‌క్వార్టర్స్ సిబ్బంది వెటరన్లు, యుద్ధ వితంతువులు మరియు సేవలో ఉన్న సిబ్బందికి అన్ని బ్రాండ్లు అందుబాటులో ఉంచి గరిష్ట సంతృప్తి కలిగించడానికి నిరంతరం కృషి చేస్తున్నారు.",signIn:"సైన్ ఇన్",register:"నమోదు",forgotPwd:"పాస్‌వర్డ్ మర్చిపోయారా",email:"ఇమెయిల్",password:"పాస్‌వర్డ్",name:"మీ పేరు",choosePwd:"పాస్‌వర్డ్ ఎంచుకోండి",rememberMe:"నన్ను గుర్తుంచుకో",login:"లాగిన్",bookSlot:"స్లాట్ బుక్",dashboard:"డ్యాష్‌బోర్డ్",cancel:"రద్దు",viewToken:"టోకెన్ చూడు",confirmBooking:"బుకింగ్ నిర్ధారించు",selectCategory:"వర్గం",selectDate:"తేదీ ఎంచుకోండి",selectTime:"సమయం ఎంచుకోండి",spotsLeft:"స్థానాలు",full:"నిండింది",holiday:"సెలవు",active:"సక్రియం",completed:"పూర్తి",cancelled:"రద్దు",bookingSuccess:"బుకింగ్ నిర్ధారించబడింది! 🎉",cancelSuccess:"బుకింగ్ రద్దు చేయబడింది",onePerDay:"ఈ తేదీకి బుకింగ్ ఉంది!",adminLogin:"అడ్మిన్ లాగిన్",userLogin:"యూజర్ లాగిన్",allBookings:"అన్ని బుకింగ్‌లు",slotManager:"స్లాట్ మేనేజర్",userManager:"యూజర్ మేనేజర్",overview:"అవలోకనం",welcomeMsg:"స్వాగతం",noticeBoard:"నోటిసు బోర్డ్",noNoticesYet:"ఇంకా నోటిసులు పోస్ట్ చేయలేదు",totalBookings:"మొత్తం బుకింగ్‌లు",activeTokens:"సక్రియ టోకెన్‌లు",availableToday:"ఈ రోజు అందుబాటులో",upcomingBooking:"రాబోయే బుకింగ్",date:"తేదీ",time:"సమయం",token:"టోకెన్",noUpcomingBookings:"రాబోయే బుకింగ్‌లు లేవు",bookSlotToVisit:"కెంటీన్‌కు వెళ్లడానికి స్లాట్ బుక్ చేయండి",adminOverview:"అడ్మిన్ అవలోకనం",realTimeMetrics:"4213 యూఆర్‌సీ ఎన్‌సీసీ కోసం రియల్-టైమ్ మెట్రిక్‌లు",postUpdates:"మీ డ్యాష్‌బోర్డ్‌లో సభి వినియోగదారులు చూడగలిగే అప్‌డేట్‌లు పోస్ట్ చేయండి",postAnnouncement:"వినియోగదారుల కోసం ఘోషణ పోస్ట్ చేయండి",postNotice:"నోటిసు పోస్ట్ చేయండి",todaysBookings:"ఈ రోజు బుకింగ్‌లు",totalUsers:"మొత్తం వినియోగదారులు",pendingApproval:"ఆమోదనకు పెండింగ్",todaysSlotFillRate:"ఈ రోజు స్లాట్ నింపే రేటు",bookingsByCategory:"వర్గం ద్వారా బుకింగ్‌లు",groceryOnly:"కిరాణా",liquorOnly:"మద్యం మాత్రమే",groceryAndLiquor:"కిరాణా + మద్యం",usersWithActiveBookings:"సక్రియ బుకింగ్‌లు ఉన్న వినియోగదారులు",show:"చూపించు",hide:"దాచు",language:"భాష",kurnool:"కర్నూల్",nccGroup:"4213 యూఆర్‌సీ ఎన్‌సీసీ",remove:"తొలగించండి",filled:"నిండింది",notice:"నోటిసు",notices:"నోటిసులు",myBookingsTitle:"నా బుకింగ్‌లు",canteenSlotHistory:"మీ క్యాంటీన్ స్లాట్ చరిత్ర",noBookingsFound:"బుకింగ్‌లు కనుగొనబడలేదు",bookingsAppearHere:"బుకింగ్‌లు ఇక్కడ కనిపిస్తాయి",entryToken:"ప్రవేశ టోకెన్",showAtGate:"గేట్ వద్ద చూపించండి",all:"అన్నీ",signOut:"సైన్ అవుట్",statusActive:"సక్రియం",regimentLabel:"రెజిమెంట్",cardIdLabel:"కార్డ్ ఐడి",roleLabel:"పాత్ర",openToAll:"అందరికీ తెరిచి ఉంది",registeredMembers:"నమోదిత సభ్యులు",combined:"కలిపి",selectArrow:"ఎంచుకోండి →",noSlotsAdmin:"ఇంకా స్లాట్‌లు జోడించబడలేదు. తర్వాత చూడండి.",pastDate:"గత తేదీ",noSlotsYet:"ఇంకా స్లాట్‌లు జోడించబడలేదు",holidayClosed:"సెలవు / మూసివేయబడింది",fullyBooked:"పూర్తిగా బుక్ అయింది",slotAvailable:"స్లాట్ అందుబాటులో ఉంది",slotsAvailable:"స్లాట్‌లు అందుబాటులో ఉన్నాయి",limited:"పరిమితం",timeOver:"సమయం ముగిసింది",closed:"మూసివేయబడింది",nameLabel:"పేరు",spotsAvailableLabel:"అందుబాటులో ఉన్న స్థానాలు",bookingConfirmedTitle:"బుకింగ్ నిర్ధారించబడింది!",viewTokenInBookings:"నా బుకింగ్‌లలో టోకెన్ చూడండి",bookAnother:"మరొకటి బుక్ చేయండి",reserveCanteenSlot:"కొన్ని దశల్లో మీ క్యాంటీన్ స్లాట్ బుక్ చేయండి",back:"వెనుకకు" },
-  ta: { welcome:"வரவேற்கிறோம்",unit:"4213 யூஆர்சி என்சிசி குழு, கர்நூல்",tagline:"இ-ஸ்லாட் இங்கே பதிவு செய்யுங்கள்",motto:"ஒற்றுமை மற்றும் ஒழுக்கம்",nonMemberNote:"உறுப்பினர் அல்லாதவர்கள் மளிகை மட்டுமே பதிவு செய்யலாம்.",servingNote:"சேவையில் உள்ளவர்கள் மதுபானத்திற்கு OIC ஐ தொடர்பு கொள்ளவும்.",grocery:"மளிகை",liquor:"மதுபானம்",both:"இரண்டும்",myBookings:"என் பதிவுகள் / ரத்து",downloadApp:"ஆப் பதிவிறக்கம்",myProfile:"என் சுயவிவரம்",liquorNote:"குறிப்பு: என்சிசி பதிவு செய்தவர்கள் மட்டுமே மதுபானம் பதிவு செய்யலாம்",aboutUs:"எங்களை பற்றி",aboutText:"தலைவர் மற்றும் யூஆர்சி ஜிபி தலைமையகத்தின் அனைத்து ஊழியர்களும் வீரர்கள், போர் விதவைகள் மற்றும் சேவையில் உள்ளவர்களுக்கு அனைத்து பிராண்டுகளையும் வழங்கி அதிகபட்ச திருப்தி அளிக்க இடைவிடாது முயற்சிக்கின்றனர்.",signIn:"உள்நுழை",register:"பதிவு",forgotPwd:"கடவுச்சொல் மறந்தீர்களா",email:"மின்னஞ்சல்",password:"கடவுச்சொல்",name:"உங்கள் பெயர்",choosePwd:"கடவுச்சொல் தேர்வு",rememberMe:"என்னை நினைவில் வையுங்கள்",login:"உள்நுழைக",bookSlot:"ஸ்லாட் பதிவு",dashboard:"டாஷ்போர்டு",cancel:"ரத்து",viewToken:"டோக்கன் பார்",confirmBooking:"பதிவை உறுதிப்படுத்து",selectCategory:"வகை",selectDate:"தேதி தேர்வு",selectTime:"நேரம் தேர்வு",spotsLeft:"இடங்கள்",full:"நிரம்பியது",holiday:"விடுமுறை",active:"செயல்பாட்டில்",completed:"முடிந்தது",cancelled:"ரத்தானது",bookingSuccess:"பதிவு உறுதிப்படுத்தப்பட்டது! 🎉",cancelSuccess:"பதிவு ரத்தானது",onePerDay:"இந்த தேதியில் ஏற்கனவே பதிவு உள்ளது!",adminLogin:"நிர்வாக உள்நுழைவு",userLogin:"பயனர் உள்நுழைவு",allBookings:"அனைத்து பதிவுகள்",slotManager:"ஸ்லாட் மேலாளர்",userManager:"பயனர் மேலாளர்",overview:"கண்ணோட்டம்",welcomeMsg:"வரவேற்கிறோம்",noticeBoard:"அறிப்பு பலகை",noNoticesYet:"இன்னும் எந்த அறிப்பும் பதிவிடப்படவில்லை",totalBookings:"மொத்த பதிவுகள்",activeTokens:"செயலில் உள்ள டோக்கன்கள்",availableToday:"இன்று கிடைக்கும்",upcomingBooking:"வரவிருக்கும் பதிவு",date:"தேதி",time:"நேரம்",token:"டோக்கன்",noUpcomingBookings:"வரவிருக்கும் பதிவுகள் இல்லை",bookSlotToVisit:"கான்டீன் பார்வையிட ஸ்லாட் பதிவு செய்யவும்",adminOverview:"நிர்வாக மேலோட்டம்",realTimeMetrics:"4213 யூஆர்சி என்சிசிக்கான நிজ-நேர மெட்ரிக்குகள்",postUpdates:"உங்கள் டாஷ்போர்டுவில் அனைத்து பயனர்களும் பார்க்கக்கூடிய புதுப்பிப்புகளை பதிவிடவும்",postAnnouncement:"பயனர்களுக்கான அறிவிப்பு பதிவிடவும்",postNotice:"அறிப்பு பதிவிடவும்",todaysBookings:"இன்றைய பதிவுகள்",totalUsers:"மொத்த பயனர்கள்",pendingApproval:"ஒப்புதலுக்கு காத்திருக்கிறது",todaysSlotFillRate:"இன்றைய ஸ்லாட் நிரப்பு விகிதம்",bookingsByCategory:"வகையின் அடிப்படையில் பதிவுகள்",groceryOnly:"மளிகை",liquorOnly:"மதுபானம் மட்டுமே",groceryAndLiquor:"மளிகை + மதுபானம்",usersWithActiveBookings:"செயலில் உள்ள பதிவுகள் உள்ள பயனர்கள்",show:"காட்டு",hide:"மறை",language:"மொழி",kurnool:"கர்நூல்",nccGroup:"4213 யூஆர்சி என்சிசி",remove:"அகற்று",filled:"நிரம்பியது",notice:"அறிப்பு",notices:"அறிப்புகள்" }
-};
-// ─────────────────────────────────────────────────────────────────────────────
+  en: { welcome:"WELCOME TO",unit:"4213 URC NCC GROUP, KURNOOL",tagline:"Book Your E-Slots Here",motto:"Unity and Discipline",nonMemberNote:"Non-Members are only allowed to book Grocery.",servingNote:"All Serving Personnel are requested to contact OIC/Canteen manager for drawl of liquor with Leave Certificate.",grocery:"GROCERY",liquor:"LIQUOR",both:"BOTH",myBookings:"MY BOOKINGS / CANCEL",downloadApp:"DOWNLOAD APP",myProfile:"MY PROFILE",liquorNote:"Note: Only URC NCC Group registered customers can book Liquor",aboutUs:"ABOUT US",aboutText:"Chairman, and all Staff members of URC GP HQ are constantly striving hard to provide utmost satisfaction to Veterans, War Widows, and Serving Pers by ensuring all variety of brands are made available be it Grocery or Liquor items. Our singular aim is to provide utmost satisfaction to our esteemed customers.",signIn:"Sign In",register:"Register",forgotPwd:"Forgot Password",email:"Email Address",password:"Password",name:"Your Name",choosePwd:"Choose a Password",rememberMe:"Remember Me",login:"Log In",bookSlot:"Book Slot",dashboard:"Dashboard",cancel:"Cancel",viewToken:"View Token",confirmBooking:"Confirm Booking",selectCategory:"Category",selectDate:"Select Date",selectTime:"Select Time",spotsLeft:"spots left",full:"Full",holiday:"Holiday",active:"Active",completed:"Completed",cancelled:"Cancelled",bookingSuccess:"Booking confirmed! 🎉",cancelSuccess:"Booking cancelled",onePerDay:"You already have a booking on this date!",adminLogin:"Admin Login",userLogin:"User Login",allBookings:"All Bookings",slotManager:"Slot Manager",userManager:"User Manager",overview:"Overview",welcomeMsg:"Welcome",noticeBoard:"Notice Board",noNoticesYet:"No notices posted yet",totalBookings:"Total Bookings",activeTokens:"Active Tokens",availableToday:"Available Today",upcomingBooking:"Upcoming Booking",date:"Date",time:"Time",token:"Token",noUpcomingBookings:"No upcoming bookings",bookSlotToVisit:"Book a slot to visit the canteen",adminOverview:"Admin Overview",realTimeMetrics:"Real-time system metrics for 4213 URC NCC",postUpdates:"Post updates that all users can see on their dashboard",postAnnouncement:"Post an announcement for users",postNotice:"Post Notice",todaysBookings:"Today's Bookings",totalUsers:"Total Users",pendingApproval:"Pending Approval",todaysSlotFillRate:"Today's Slot Fill Rate",bookingsByCategory:"Bookings by Category",groceryOnly:"Grocery",liquorOnly:"Liquor Only",groceryAndLiquor:"Grocery + Liquor",usersWithActiveBookings:"Users who currently have active bookings",show:"Show",hide:"Hide",language:"LANGUAGE",kurnool:"Kurnool",nccGroup:"4213 URC NCC",remove:"Remove",filled:"filled",notice:"notice",notices:"notices",myBookingsTitle:"My Bookings",canteenSlotHistory:"Your canteen slot history",noBookingsFound:"No bookings found",bookingsAppearHere:"Bookings appear here once created",entryToken:"ENTRY TOKEN",showAtGate:"Show at gate",all:"All",signOut:"Sign Out",statusActive:"ACTIVE",regimentLabel:"Regiment",cardIdLabel:"Card ID",roleLabel:"Role",openToAll:"Open to all",registeredMembers:"Registered members",combined:"Combined",selectArrow:"Select →",noSlotsAdmin:"No slots have been added by admin yet. Please check back later.",pastDate:"Past date",noSlotsYet:"No slots added yet",holidayClosed:"Holiday / Closed",fullyBooked:"Fully booked",slotAvailable:"slot available",slotsAvailable:"slots available",limited:"Limited",timeOver:"TIME OVER",closed:"CLOSED",nameLabel:"Name",spotsAvailableLabel:"Spots Available",bookingConfirmedTitle:"Booking Confirmed!",viewTokenInBookings:"View your token in My Bookings",bookAnother:"Book Another",reserveCanteenSlot:"Reserve your canteen slot in a few steps",back:"Back",bookingLabel:"Booking",tokensLabel:"Tokens",timingLabel:"Timing" },
+  hi: { welcome:"स्वागत है",unit:"4213 यूआरसी एनसीसी ग्रुप, कुर्नूल",tagline:"यहाँ अपना ई-स्लॉट बुक करें",motto:"एकता और अनुशासन",nonMemberNote:"गैर-सदस्य केवल ग्रोसरी बुक कर सकते हैं।",servingNote:"सेवारत कर्मियों से अनुरोध है कि लिकर निकासी के लिए OIC/कैंटीन प्रबंधक से संपर्क करें।",grocery:"किराना",liquor:"शराब",both:"दोनों",myBookings:"मेरी बुकिंग / रद्द",downloadApp:"ऐप डाउनलोड",myProfile:"मेरी प्रोफ़ाइल",liquorNote:"नोट: केवल यूआरसी एनसीसी के पंजीकृत ग्राहक शराब बुक कर सकते हैं",aboutUs:"हमारे बारे में",aboutText:"अध्यक्ष और यूआरसी जीपी मुख्यालय के सभी कर्मचारी वीरों, युद्ध विधवाओं और सेवारत कर्मियों को किराना और शराब दोनों प्रकार की सभी ब्रांड उपलब्ध कराकर अधिकतम संतुष्टि प्रदान करने का प्रयास करते हैं।",signIn:"साइन इन",register:"पंजीकरण",forgotPwd:"पासवर्ड भूल गए",email:"ईमेल पता",password:"पासवर्ड",name:"आपका नाम",choosePwd:"पासवर्ड चुनें",rememberMe:"मुझे याद रखें",login:"लॉग इन",bookSlot:"स्लॉट बुक करें",dashboard:"डैशबोर्ड",cancel:"रद्द करें",viewToken:"टोकन देखें",confirmBooking:"बुकिंग की पुष्टि",selectCategory:"श्रेणी",selectDate:"तारीख चुनें",selectTime:"समय चुनें",spotsLeft:"स्थान शेष",full:"भरा",holiday:"छुट्टी",active:"सक्रिय",completed:"पूर्ण",cancelled:"रद्द",bookingSuccess:"बुकिंग सफल! 🎉",cancelSuccess:"बुकिंग रद्द हुई",onePerDay:"इस तारीख पर पहले से बुकिंग है!",adminLogin:"एडमिन लॉगिन",userLogin:"यूजर लॉगिन",allBookings:"सभी बुकिंग",slotManager:"स्लॉट प्रबंधक",userManager:"यूजर प्रबंधक",overview:"अवलोकन",welcomeMsg:"स्वागत है",noticeBoard:"सूचना बोर्ड",noNoticesYet:"अभी कोई सूचना पोस्ट नहीं की गई",totalBookings:"कुल बुकिंग",activeTokens:"सक्रिय टोकन",availableToday:"आज उपलब्ध",upcomingBooking:"आने वाली बुकिंग",date:"तारीख",time:"समय",token:"टोकन",noUpcomingBookings:"कोई आने वाली बुकिंग नहीं",bookSlotToVisit:"कैंटीन पर जाने के लिए स्लॉट बुक करें",adminOverview:"एडमिन अवलोकन",realTimeMetrics:"4213 यूआरसी एनसीसी के लिए रीयल-टाइम मेट्रिक्स",postUpdates:"अपडेट पोस्ट करें जो सभी उपयोगकर्ता अपने डैशबोर्ड पर देख सकें",postAnnouncement:"उपयोगकर्ताओं के लिए घोषणा पोस्ट करें",postNotice:"सूचना पोस्ट करें",todaysBookings:"आज की बुकिंग",totalUsers:"कुल उपयोगकर्ता",pendingApproval:"स्वीकृति के लिए लंबित",todaysSlotFillRate:"आज की स्लॉट भरण दर",bookingsByCategory:"श्रेणी के अनुसार बुकिंग",groceryOnly:"किराना",liquorOnly:"केवल शराब",groceryAndLiquor:"किराना + शराब",usersWithActiveBookings:"वे उपयोगकर्ता जिनके पास सक्रिय बुकिंग है",show:"दिखाएँ",hide:"छिपाएँ",language:"भाषा",kurnool:"कुर्नूल",nccGroup:"4213 यूआरसी एनसीसी",remove:"हटाएँ",filled:"भरा",notice:"सूचना",notices:"सूचनाएं",myBookingsTitle:"मेरी बुकिंग",canteenSlotHistory:"आपका कैंटीन स्लॉट इतिहास",noBookingsFound:"कोई बुकिंग नहीं मिली",bookingsAppearHere:"बुकिंग यहाँ दिखाई देंगी",entryToken:"प्रवेश टोकन",showAtGate:"गेट पर दिखाएँ",all:"सभी",signOut:"साइन आउट",statusActive:"सक्रिय",regimentLabel:"रेजिमेंट",cardIdLabel:"कार्ड आईडी",roleLabel:"भूमिका",openToAll:"सभी के लिए खुला",registeredMembers:"पंजीकृत सदस्य",combined:"संयुक्त",selectArrow:"चुनें →",noSlotsAdmin:"अभी तक कोई स्लॉट नहीं जोड़ा गया। बाद में देखें।",pastDate:"पिछली तारीख",noSlotsYet:"अभी तक कोई स्लॉट नहीं",holidayClosed:"छुट्टी / बंद",fullyBooked:"पूरी तरह बुक",slotAvailable:"स्लॉट उपलब्ध",slotsAvailable:"स्लॉट उपलब्ध",limited:"सीमित",timeOver:"समय समाप्त",closed:"बंद",nameLabel:"नाम",spotsAvailableLabel:"उपलब्ध स्थान",bookingConfirmedTitle:"बुकिंग की पुष्टि हो गई!",viewTokenInBookings:"मेरी बुकिंग में टोकन देखें",bookAnother:"और बुक करें",reserveCanteenSlot:"कुछ चरणों में अपना कैंटीन स्लॉट बुक करें",back:"वापस",bookingLabel:"बुकिंग",tokensLabel:"टोकन",timingLabel:"समय" },
+  te: { welcome:"స్వాగతం",unit:"4213 యూఆర్‌సీ ఎన్‌సీసీ గ్రూప్, కర్నూల్",tagline:"ఇక్కడ మీ ఇ-స్లాట్ బుక్ చేయండి",motto:"ఐక్యత మరియు క్రమశిక్షణ",nonMemberNote:"సభ్యులు కాని వారు కేవలం కిరాణా బుక్ చేయవచ్చు.",servingNote:"సేవలో ఉన్న సిబ్బంది మద్యం కోసం OIC/కాంటీన్ మేనేజర్‌ని సంప్రదించాలి.",grocery:"కిరాణా",liquor:"మద్యం",both:"రెండూ",myBookings:"నా బుకింగ్‌లు / రద్దు",downloadApp:"యాప్ డౌన్‌లోడ్",myProfile:"నా ప్రొఫైల్",liquorNote:"గమనిక: ఎన్‌సీసీ నమోదిత సభ్యులు మాత్రమే మద్యం బుక్ చేయవచ్చు",aboutUs:"మా గురించి",aboutText:"చైర్మన్ మరియు యూఆర్‌సీ జీపీ హెడ్‌క్వార్టర్స్ సిబ్బంది వెటరన్లు, యుద్ధ వితంతువులు మరియు సేవలో ఉన్న సిబ్బందికి అన్ని బ్రాండ్లు అందుబాటులో ఉంచి గరిష్ట సంతృప్తి కలిగించడానికి నిరంతరం కృషి చేస్తున్నారు.",signIn:"సైన్ ఇన్",register:"నమోదు",forgotPwd:"పాస్‌వర్డ్ మర్చిపోయారా",email:"ఇమెయిల్",password:"పాస్‌వర్డ్",name:"మీ పేరు",choosePwd:"పాస్‌వర్డ్ ఎంచుకోండి",rememberMe:"నన్ను గుర్తుంచుకో",login:"లాగిన్",bookSlot:"స్లాట్ బుక్",dashboard:"డ్యాష్‌బోర్డ్",cancel:"రద్దు",viewToken:"టోకెన్ చూడు",confirmBooking:"బుకింగ్ నిర్ధారించు",selectCategory:"వర్గం",selectDate:"తేదీ ఎంచుకోండి",selectTime:"సమయం ఎంచుకోండి",spotsLeft:"స్థానాలు",full:"నిండింది",holiday:"సెలవు",active:"సక్రియం",completed:"పూర్తి",cancelled:"రద్దు",bookingSuccess:"బుకింగ్ నిర్ధారించబడింది! 🎉",cancelSuccess:"బుకింగ్ రద్దు చేయబడింది",onePerDay:"ఈ తేదీకి బుకింగ్ ఉంది!",adminLogin:"అడ్మిన్ లాగిన్",userLogin:"యూజర్ లాగిన్",allBookings:"అన్ని బుకింగ్‌లు",slotManager:"స్లాట్ మేనేజర్",userManager:"యూజర్ మేనేజర్",overview:"అవలోకనం",welcomeMsg:"స్వాగతం",noticeBoard:"నోటిసు బోర్డ్",noNoticesYet:"ఇంకా నోటిసులు పోస్ట్ చేయలేదు",totalBookings:"మొత్తం బుకింగ్‌లు",activeTokens:"సక్రియ టోకెన్‌లు",availableToday:"ఈ రోజు అందుబాటులో",upcomingBooking:"రాబోయే బుకింగ్",date:"తేదీ",time:"సమయం",token:"టోకెన్",noUpcomingBookings:"రాబోయే బుకింగ్‌లు లేవు",bookSlotToVisit:"కెంటీన్‌కు వెళ్లడానికి స్లాట్ బుక్ చేయండి",adminOverview:"అడ్మిన్ అవలోకనం",realTimeMetrics:"4213 యూఆర్‌సీ ఎన్‌సీసీ కోసం రియల్-టైమ్ మెట్రిక్‌లు",postUpdates:"మీ డ్యాష్‌బోర్డ్‌లో సభి వినియోగదారులు చూడగలిగే అప్‌డేట్‌లు పోస్ట్ చేయండి",postAnnouncement:"వినియోగదారుల కోసం ఘోషణ పోస్ట్ చేయండి",postNotice:"నోటిసు పోస్ట్ చేయండి",todaysBookings:"ఈ రోజు బుకింగ్‌లు",totalUsers:"మొత్తం వినియోగదారులు",pendingApproval:"ఆమోదనకు పెండింగ్",todaysSlotFillRate:"ఈ రోజు స్లాట్ నింపే రేటు",bookingsByCategory:"వర్గం ద్వారా బుకింగ్‌లు",groceryOnly:"కిరాణా",liquorOnly:"మద్యం మాత్రమే",groceryAndLiquor:"కిరాణా + మద్యం",usersWithActiveBookings:"సక్రియ బుకింగ్‌లు ఉన్న వినియోగదారులు",show:"చూపించు",hide:"దాచు",language:"భాష",kurnool:"కర్నూల్",nccGroup:"4213 యూఆర్‌సీ ఎన్‌సీసీ",remove:"తొలగించండి",filled:"నిండింది",notice:"నోటిసు",notices:"నోటిసులు",myBookingsTitle:"నా బుకింగ్‌లు",canteenSlotHistory:"మీ క్యాంటీన్ స్లాట్ చరిత్ర",noBookingsFound:"బుకింగ్‌లు కనుగొనబడలేదు",bookingsAppearHere:"బుకింగ్‌లు ఇక్కడ కనిపిస్తాయి",entryToken:"ప్రవేశ టోకెన్",showAtGate:"గేట్ వద్ద చూపించండి",all:"అన్నీ",signOut:"సైన్ అవుట్",statusActive:"సక్రియం",regimentLabel:"రెజిమెంట్",cardIdLabel:"కార్డ్ ఐడి",roleLabel:"పాత్ర",openToAll:"అందరికీ తెరిచి ఉంది",registeredMembers:"నమోదిత సభ్యులు",combined:"కలిపి",selectArrow:"ఎంచుకోండి →",noSlotsAdmin:"ఇంకా స్లాట్‌లు జోడించబడలేదు. తర్వాత చూడండి.",pastDate:"గత తేదీ",noSlotsYet:"ఇంకా స్లాట్‌లు జోడించబడలేదు",holidayClosed:"సెలవు / మూసివేయబడింది",fullyBooked:"పూర్తిగా బుక్ అయింది",slotAvailable:"స్లాట్ అందుబాటులో ఉంది",slotsAvailable:"స్లాట్‌లు అందుబాటులో ఉన్నాయి",limited:"పరిమితం",timeOver:"సమయం ముగిసింది",closed:"మూసివేయబడింది",nameLabel:"పేరు",spotsAvailableLabel:"అందుబాటులో ఉన్న స్థానాలు",bookingConfirmedTitle:"బుకింగ్ నిర్ధారించబడింది!",viewTokenInBookings:"నా బుకింగ్‌లలో టోకెన్ చూడండి",bookAnother:"మరొకటి బుక్ చేయండి",reserveCanteenSlot:"కొన్ని దశల్లో మీ క్యాంటీన్ స్లాట్ బుక్ చేయండి",back:"వెనుకకు",bookingLabel:"బుకింగ్",tokensLabel:"టోకెన్‌లు",timingLabel:"సమయం" },
+ta:{welcome:"வரவேற்கிறோம்",unit:"4213 யூஆர்சி என்சிசி குழு, கர்நூல்",tagline:"இங்கே உங்கள் இ-ஸ்லாட்டை பதிவு செய்யுங்கள்",motto:"ஒற்றுமை மற்றும் ஒழுக்கம்",nonMemberNote:"உறுப்பினர்கள் அல்லாதவர்கள் மளிகை மட்டும் பதிவு செய்யலாம்.",servingNote:"சேவையில் உள்ள பணியாளர்கள் மதுபானம் பெற OIC/கேன்டீன் மேலாளரை தொடர்பு கொள்ள வேண்டும்.",grocery:"மளிகை",liquor:"மதுபானம்",both:"இரண்டும்",myBookings:"என் பதிவு / ரத்து",downloadApp:"ஆப் பதிவிறக்கம்",myProfile:"என் சுயவிவரம்",liquorNote:"குறிப்பு: பதிவு செய்யப்பட்ட உறுப்பினர்கள் மட்டுமே மதுபானம் பதிவு செய்ய முடியும்",aboutUs:"எங்களை பற்றி",aboutText:"தலைவர் மற்றும் யூஆர்சி ஜிபி தலைமையகத்தின் அனைத்து பணியாளர்களும் முன்னாள் வீரர்கள், போர் விதவைகள் மற்றும் சேவையில் உள்ள பணியாளர்களுக்கு அனைத்து வகை பொருட்களையும் வழங்கி அதிகபட்ச திருப்தி அளிக்க தொடர்ந்து முயற்சித்து வருகின்றனர்.",signIn:"உள்நுழை",register:"பதிவு செய்",forgotPwd:"கடவுச்சொல் மறந்துவிட்டதா",email:"மின்னஞ்சல் முகவரி",password:"கடவுச்சொல்",name:"உங்கள் பெயர்",choosePwd:"கடவுச்சொல் தேர்வு செய்",rememberMe:"என்னை நினைவில் கொள்ளவும்",login:"உள்நுழை",bookSlot:"ஸ்லாட் பதிவு செய்",dashboard:"டாஷ்போர்டு",cancel:"ரத்து",viewToken:"டோக்கன் காண்க",confirmBooking:"பதிவு உறுதி செய்",selectCategory:"வகை தேர்வு",selectDate:"தேதி தேர்வு",selectTime:"நேரம் தேர்வு",spotsLeft:"இடங்கள் உள்ளது",full:"நிறைந்தது",holiday:"விடுமுறை",active:"செயலில்",completed:"முடிந்தது",cancelled:"ரத்து செய்யப்பட்டது",bookingSuccess:"பதிவு உறுதி செய்யப்பட்டது! 🎉",cancelSuccess:"பதிவு ரத்து செய்யப்பட்டது",onePerDay:"இந்த தேதியில் ஏற்கனவே பதிவு உள்ளது!",adminLogin:"அட்மின் உள்நுழைவு",userLogin:"பயனர் உள்நுழைவு",allBookings:"அனைத்து பதிவுகள்",slotManager:"ஸ்லாட் மேலாளர்",userManager:"பயனர் மேலாளர்",overview:"மேலோட்டம்",welcomeMsg:"வரவேற்கிறோம்",noticeBoard:"அறிவிப்பு பலகை",noNoticesYet:"இன்னும் அறிவிப்புகள் இல்லை",totalBookings:"மொத்த பதிவுகள்",activeTokens:"செயலில் உள்ள டோக்கன்கள்",availableToday:"இன்று கிடைக்கும்",upcomingBooking:"வரவிருக்கும் பதிவு",date:"தேதி",time:"நேரம்",token:"டோக்கன்",noUpcomingBookings:"வரவிருக்கும் பதிவு இல்லை",bookSlotToVisit:"கேன்டீனுக்கு வர ஸ்லாட் பதிவு செய்யுங்கள்",adminOverview:"அட்மின் மேலோட்டம்",realTimeMetrics:"4213 யூஆர்சி என்சிசி க்கான நேரடி அளவீடுகள்",postUpdates:"அனைத்து பயனர்களும் பார்க்கும் வகையில் புதுப்பிப்புகளை பதிவு செய்யுங்கள்",postAnnouncement:"பயனர்களுக்கான அறிவிப்பை பதிவு செய்யுங்கள்",postNotice:"அறிவிப்பு இடுகை",todaysBookings:"இன்றைய பதிவுகள்",totalUsers:"மொத்த பயனர்கள்",pendingApproval:"ஒப்புதல் நிலுவையில்",todaysSlotFillRate:"இன்றைய ஸ்லாட் நிரப்பு வீதம்",bookingsByCategory:"வகைப்படி பதிவுகள்",groceryOnly:"மளிகை",liquorOnly:"மதுபானம் மட்டும்",groceryAndLiquor:"மளிகை + மதுபானம்",usersWithActiveBookings:"செயலில் உள்ள பதிவுகள் கொண்ட பயனர்கள்",show:"காட்டு",hide:"மறை",language:"மொழி",kurnool:"கர்நூல்",nccGroup:"4213 யூஆர்சி என்சிசி",remove:"நீக்கு",filled:"நிறைந்தது",notice:"அறிவிப்பு",notices:"அறிவிப்புகள்",myBookingsTitle:"என் பதிவுகள்",canteenSlotHistory:"உங்கள் கேன்டீன் ஸ்லாட் வரலாறு",noBookingsFound:"பதிவுகள் இல்லை",bookingsAppearHere:"பதிவுகள் இங்கே தோன்றும்",entryToken:"நுழைவு டோக்கன்",showAtGate:"வாயிலில் காட்டவும்",all:"அனைத்தும்",signOut:"வெளியேறு",statusActive:"செயலில்",regimentLabel:"படைப்பிரிவு",cardIdLabel:"அட்டை ஐடி",roleLabel:"பங்கு",openToAll:"அனைவருக்கும் திறந்தது",registeredMembers:"பதிவு செய்யப்பட்ட உறுப்பினர்கள்",combined:"இணைந்தது",selectArrow:"தேர்வு →",noSlotsAdmin:"இன்னும் ஸ்லாட்கள் சேர்க்கப்படவில்லை. பின்னர் பார்க்கவும்.",pastDate:"கடந்த தேதி",noSlotsYet:"இன்னும் ஸ்லாட்கள் இல்லை",holidayClosed:"விடுமுறை / மூடப்பட்டது",fullyBooked:"முழுவதும் பதிவு செய்யப்பட்டது",slotAvailable:"ஸ்லாட் கிடைக்கும்",slotsAvailable:"ஸ்லாட்கள் கிடைக்கும்",limited:"வரையறுக்கப்பட்டது",timeOver:"நேரம் முடிந்தது",closed:"மூடப்பட்டது",nameLabel:"பெயர்",spotsAvailableLabel:"கிடைக்கும் இடங்கள்",bookingConfirmedTitle:"பதிவு உறுதி செய்யப்பட்டது!",viewTokenInBookings:"என் பதிவுகளில் டோக்கனை பார்க்கவும்",bookAnother:"மற்றொன்று பதிவு செய்யுங்கள்",reserveCanteenSlot:"சில படிகளில் உங்கள் கேன்டீன் ஸ்லாட்டை பதிவு செய்யுங்கள்",back:"பின் செல்லவும்",bookingLabel:"பதிவு",tokensLabel:"டோக்கன்கள்",timingLabel:"நேரம்"}};// ─────────────────────────────────────────────────────────────────────────────
 
 // ── Theme tokens ──────────────────────────────────────────────────────────────
 const L = { bg:"#f5f6f7", card:"#ffffff", text:"#1a1a1a", muted:"#6b7280", border:"#e5e7eb", shadow:"0 2px 12px rgba(0,0,0,0.06)" };
@@ -148,7 +146,7 @@ function NccLogo({ size = 80 }: any) {
   return (
     <img
       src="/image.png"
-      alt="NCC Logo"
+      alt="URC NCC Logo"
       style={{
         width: size,
         height: size * 1.18,
@@ -260,7 +258,12 @@ function PwaInstallPrompt() {
 
   const dismiss = () => {
     setVisible(false);
-    localStorage.setItem("pwa-install-dismissed", "1");
+    // Re-show the prompt after 20 seconds every time user dismisses it
+    // until they permanently dismiss or install the app
+    const timer = setTimeout(() => {
+      setVisible(true);
+    }, 20000);
+    return () => clearTimeout(timer);
   };
 
   const install = async () => {
@@ -280,63 +283,42 @@ function PwaInstallPrompt() {
     <div
       style={{
         position: "fixed",
-        inset: "auto 16px 16px 16px",
+        inset: "16px 16px auto 16px",
         zIndex: 3000,
         display: "flex",
         justifyContent: "center",
         pointerEvents: "none",
+        top: 16,
       }}
     >
       <div
         style={{
           width: "100%",
-          maxWidth: 420,
+          maxWidth: 520,
           background: "linear-gradient(135deg,#1F3D2B,#2d5a3d)",
           color: "#fff",
-          borderRadius: 22,
-          padding: "18px 18px 16px",
-          boxShadow: "0 24px 64px rgba(0,0,0,0.22)",
+          borderRadius: 12,
+          padding: "12px 14px",
+          boxShadow: "0 8px 28px rgba(0,0,0,0.25)",
           pointerEvents: "auto",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
         }}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "flex-start", marginBottom: 10 }}>
-          <div>
-            <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 4 }}>Install URC NCC App</div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.82)", lineHeight: 1.5 }}>
-              {showNativeInstall
-                ? "Add this website to your phone like an app for quick booking, offline caching, and a full-screen experience."
-                : isIos
-                  ? "On iPhone, tap Share and then Add to Home Screen to install this app."
-                  : "This app will be installable once your browser allows the install prompt."}
-            </div>
+        <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 3 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ fontSize: 13, fontWeight: 800 }}>📱 Install App</div>
           </div>
-          <button
-            onClick={dismiss}
-            style={{
-              background: "rgba(255,255,255,0.12)",
-              border: "none",
-              borderRadius: "50%",
-              width: 30,
-              height: 30,
-              cursor: "pointer",
-              color: "#fff",
-              fontSize: 18,
-              lineHeight: 1,
-            }}
-          >
-            ×
-          </button>
+          <div style={{ fontSize: 10, color: "rgba(255,255,255,0.85)" }}>
+            {showNativeInstall
+              ? "Add to your phone for quick access"
+              : isIos
+                ? "Tap Share → Add to Home Screen"
+                : "Available on your device"}
+          </div>
         </div>
-
-        {isIos && !showNativeInstall && (
-          <div style={{ background: "rgba(255,255,255,0.12)", borderRadius: 14, padding: "11px 12px", fontSize: 12, marginBottom: 12 }}>
-            1. Tap the browser Share button.
-            <br />
-            2. Choose <strong>Add to Home Screen</strong>.
-          </div>
-        )}
-
-        <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: 6, alignItems: "center", flexShrink: 0 }}>
           {showNativeInstall && (
             <button
               onClick={install}
@@ -344,15 +326,16 @@ function PwaInstallPrompt() {
                 background: "#fff",
                 color: "#1F3D2B",
                 border: "none",
-                borderRadius: 12,
-                padding: "11px 16px",
+                borderRadius: 8,
+                padding: "6px 14px",
                 cursor: "pointer",
-                fontSize: 13,
+                fontSize: 11,
                 fontWeight: 800,
                 fontFamily: "'DM Sans',sans-serif",
+                whiteSpace: "nowrap",
               }}
             >
-              Install App
+              Install
             </button>
           )}
           <button
@@ -360,16 +343,21 @@ function PwaInstallPrompt() {
             style={{
               background: "transparent",
               color: "#fff",
-              border: "1px solid rgba(255,255,255,0.28)",
-              borderRadius: 12,
-              padding: "11px 16px",
+              border: "none",
+              borderRadius: 4,
+              padding: "4px 8px",
               cursor: "pointer",
-              fontSize: 13,
+              fontSize: 18,
               fontWeight: 700,
               fontFamily: "'DM Sans',sans-serif",
+              lineHeight: 1,
+              opacity: 0.6,
+              transition: "opacity 0.2s",
             }}
+            onMouseEnter={(e: any) => e.currentTarget.style.opacity = "1"}
+            onMouseLeave={(e: any) => e.currentTarget.style.opacity = "0.6"}
           >
-            Not Now
+            ×
           </button>
         </div>
       </div>
@@ -1108,9 +1096,9 @@ function BookSlot({ lang }: any) {
   ];
   // Convert Prisma enum value back to human-readable label for display
   const catLabel = (v: string) =>
-    v === "GROCERY"            ? "Grocery"
-  : v === "LIQUOR_ONLY"        ? "Liquor Only"
-  : v === "GROCERY_AND_LIQUOR" ? "Grocery + Liquor"
+    v === "GROCERY"            ? t.groceryOnly
+  : v === "LIQUOR_ONLY"        ? t.liquorOnly
+  : v === "GROCERY_AND_LIQUOR" ? t.groceryAndLiquor
   : v;
   const [selDate, setSelDate] = useState("");
   const [selSlot, setSelSlot] = useState<any>(null);
@@ -1272,9 +1260,9 @@ function BookSlot({ lang }: any) {
       {step === 1 && (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(170px,1fr))", gap: 13 }}>
           {[
-            { id: "GROCERY",           label: "Grocery",           icon: "🛒",    desc: "Open to all" },
-            { id: "LIQUOR_ONLY",       label: "Liquor Only",       icon: "🥃",    desc: "Registered members" },
-            { id: "GROCERY_AND_LIQUOR",label: "Grocery + Liquor",  icon: "🛒🥃",  desc: "Combined" },
+            { id: "GROCERY",           label: t.groceryOnly,    icon: "🛒",    desc: t.openToAll },
+            { id: "LIQUOR_ONLY",       label: t.liquorOnly,     icon: "🥃",    desc: t.registeredMembers },
+            { id: "GROCERY_AND_LIQUOR",label: t.groceryAndLiquor, icon: "🛒🥃",  desc: t.combined },
           ].filter((c: any) => (
             allowedCategory === "BOTH"
             || (allowedCategory === "GROCERY_ONLY" && c.id === "GROCERY")
@@ -1287,7 +1275,7 @@ function BookSlot({ lang }: any) {
               <div style={{ fontSize: 32, marginBottom: 11 }}>{c.icon}</div>
               <div style={{ fontSize: 14, fontWeight: 700, color: "var(--text)", marginBottom: 3 }}>{c.label}</div>
               <div style={{ fontSize: 12, color: "var(--muted)", marginBottom: 12 }}>{c.desc}</div>
-              <div style={{ color: "#1F3D2B", fontWeight: 600, fontSize: 12 }}>Select →</div>
+              <div style={{ color: "#1F3D2B", fontWeight: 600, fontSize: 12 }}>{t.selectArrow}</div>
             </button>
           ))}
         </div>
@@ -1795,9 +1783,10 @@ export default function App() {
             marginLeft: isMobile ? 0 : 230,
             flex: 1,
             padding: isMobile ? "18px 14px 36px" : "32px 32px 60px",
-            maxWidth: isMobile ? "100%" : "calc(100vw - 230px)",
+            width: isMobile ? "100%" : "calc(100% - 230px)",
             overflowX: "hidden",
             position: "relative",
+            overflowY: "auto",
             "--bg": vars.bg,
             "--card": vars.card,
             "--text": vars.text,
