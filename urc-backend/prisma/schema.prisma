@@ -14,7 +14,7 @@ model User {
   email              String              @unique @db.VarChar(255)
   passwordHash       String
   regiment           String              @db.VarChar(100)
-  cardId             String?             @db.VarChar(50)
+  cardId             String?             @unique @db.VarChar(50)
   allowedCategory    UserBookingAccess   @default(BOTH)
   phone              String?             @db.VarChar(20)
   role               Role                @default(USER)

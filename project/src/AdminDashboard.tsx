@@ -112,16 +112,38 @@ export default function AdminDashboard({ lang, onNav }: any) {
     status: ns(u.status),
   }));
 
-  const tb = bookings.filter((b: any) => b.date === today);
-  const tc = slots
-    .filter((s: any) => nd(s.date) === today)
-    .reduce((a: any, s: any) => a + s.capacity, 0);
-  const tb2 = slots
-    .filter((s: any) => nd(s.date) === today)
-    .reduce((a: any, s: any) => a + s.booked, 0);
-  const fp = tc ? Math.round((tb2 / tc) * 100) : 0;
-  const activeBookings = bookings.filter((b: any) => b.status === "active");
+ const tb = bookings.filter((b: any) => b.date === today);
 
+const tc = slots
+  .filter((s: any) => nd(s.date) === today)
+  .reduce((a: any, s: any) => a + s.capacity, 0);
+
+const tb2 = slots
+  .filter((s: any) => nd(s.date) === today)
+  .reduce((a: any, s: any) => a + s.booked, 0);
+
+const fp = tc ? Math.round((tb2 / tc) * 100) : 0;
+
+// Today's active tokens only
+const activeBookings = bookings.filter(
+  (b: any) =>
+    b.date === today &&
+    b.status === "active"
+);
+
+// Today's completed tokens
+const completedBookings = bookings.filter(
+  (b: any) =>
+    b.date === today &&
+    b.status === "completed"
+);
+
+// Today's cancelled tokens
+const cancelledBookings = bookings.filter(
+  (b: any) =>
+    b.date === today &&
+    b.status === "cancelled"
+);
   const addNotice = async () => {
     const message = newNotice.trim();
     if (!message) {
@@ -303,12 +325,24 @@ export default function AdminDashboard({ lang, onNav }: any) {
             i: "⏳",
             c: "#92400e",
           },
-          {
-            l: t.activeTokens,
-            v: bookings.filter((b: any) => b.status === "active").length,
-            i: "✅",
-            c: "#065f46",
-          },
+         {
+    l: t.activeTokens,
+    v: activeBookings.length,
+    i: "✅",
+    c: "#065f46",
+},
+{
+    l: "Completed Today",
+    v: completedBookings.length,
+    i: "✔️",
+    c: "#2563eb",
+},
+{
+    l: "Cancelled Today",
+    v: cancelledBookings.length,
+    i: "❌",
+    c: "#dc2626",
+},
         ].map((s: any) => (
           <div
             key={s.l}
@@ -1594,6 +1628,9 @@ export function AdminUsers() {
   const { users: rawUsers, updateSlots, updateUsers, updateBookings, showToast } = useApp();
   const isCompact = useIsMobileScreen(920);
   const [searchQuery, setSearchQuery] = useState("");
+const [userFilter, setUserFilter] = useState<
+  "all" | "pending" | "approved" | "disabled"
+>("all");
 
   const doRefresh = useCallback(async () => {
     await refreshAll(updateSlots, updateUsers, updateBookings);
@@ -1603,6 +1640,16 @@ export function AdminUsers() {
     ...u,
     status: ns(u.status),
   }));
+  const pendingCount = users.filter(
+  (u: any) => u.status === "pending"
+).length;
+
+const approvedCount = users.filter(
+  (u: any) => u.status === "active"
+).length;
+const disabledCount = users.filter(
+  (u: any) => u.status === "disabled"
+).length;
 
   // Filter by search query (name, email, card ID, regiment)
   const filterBySearch = (userList: any[]) => {
@@ -1617,8 +1664,20 @@ export function AdminUsers() {
     });
   };
 
-  const filteredUsers = filterBySearch(users);
+const filteredUsers = filterBySearch(
+  users.filter((u: any) => {
+    if (userFilter === "pending")
+      return u.status === "pending";
 
+    if (userFilter === "approved")
+      return u.status === "active";
+
+    if (userFilter === "disabled")
+      return u.status === "disabled";
+
+    return true;
+  })
+);
   // CSV Download function
   const downloadUserListCSV = () => {
     if (filteredUsers.length === 0) {
@@ -1697,23 +1756,82 @@ export function AdminUsers() {
           </p>
         </div>
         <button
-          onClick={downloadUserListCSV}
-          style={{
-            background: "#1F3D2B",
-            color: "#fff",
-            border: "none",
-            borderRadius: 10,
-            padding: "10px 16px",
-            cursor: "pointer",
-            fontFamily: "'DM Sans',sans-serif",
-            fontWeight: 600,
-            fontSize: 12,
-            whiteSpace: "nowrap",
-            flexShrink: 0,
-          }}
-        >
-          📥 Download Users
-        </button>
+    onClick={() => setUserFilter("pending")}
+    style={{
+        background: userFilter === "pending" ? "#f59e0b" : "#fff7ed",
+        color: "#92400e",
+        border: "1px solid #fbbf24",
+        borderRadius: 10,
+        padding: "10px 16px",
+        cursor: "pointer",
+        fontWeight: 700,
+    }}
+>
+    ⏳ Pending ({pendingCount})
+</button>
+
+<button
+    onClick={() => setUserFilter("approved")}
+    style={{
+        background: userFilter === "approved" ? "#16a34a" : "#f0fdf4",
+        color: "#166534",
+        border: "1px solid #86efac",
+        borderRadius: 10,
+        padding: "10px 16px",
+        cursor: "pointer",
+        fontWeight: 700,
+    }}
+>
+    ✅ Approved ({approvedCount})
+</button>
+
+<button
+    onClick={() => setUserFilter("all")}
+    style={{
+        background: "#f8fafc",
+        border: "1px solid #d1d5db",
+        borderRadius: 10,
+        padding: "10px 16px",
+        cursor: "pointer",
+        fontWeight: 700,
+    }}
+>
+    All Users
+</button>
+<button
+  onClick={() => setUserFilter("disabled")}
+  style={{
+    background:
+      userFilter === "disabled"
+        ? "#ef4444"
+        : "#fef2f2",
+    color: "#b91c1c",
+    border: "1px solid #fca5a5",
+    borderRadius: 10,
+    padding: "10px 16px",
+    cursor: "pointer",
+    fontWeight: 700,
+    fontSize: 12,
+    fontFamily: "'DM Sans',sans-serif",
+  }}
+>
+  🚫 Disabled ({disabledCount})
+</button>
+
+<button
+    onClick={downloadUserListCSV}
+    style={{
+        background: "#1F3D2B",
+        color: "#fff",
+        border: "none",
+        borderRadius: 10,
+        padding: "10px 16px",
+        cursor: "pointer",
+        fontWeight: 700,
+    }}
+>
+    📥 Download Users
+</button>
       </div>
 
       {/* Search Bar */}
