@@ -45,9 +45,14 @@ async function autoCompleteExpiredBookings() {
   const { date: todayIndia, hour: hourIndia, minute: minuteIndia } = getIndiaNowParts();
   const nowMinutes = (hourIndia * 60) + minuteIndia;
 
+  // Only bookings for today-or-earlier can possibly be expired — no need to
+  // pull every ACTIVE booking in the system on every single request.
   const activeBookings = await prisma.booking.findMany({
-    where: { status: "ACTIVE" },
-    include: { slot: true },
+    where: {
+      status: "ACTIVE",
+      slot: { date: { lte: new Date(`${todayIndia}T23:59:59`) } },
+    },
+    select: { id: true, slot: { select: { date: true, time: true } } },
   });
 
   const expiredIds = activeBookings
@@ -72,9 +77,54 @@ exports.getBookings = async (req, res) => {
   try {
     await autoCompleteExpiredBookings();
 
+    // Only pull the fields the frontend actually reads (user.name/email/cardId,
+    // slot.date/time), and cap to the last 45 days / 500 rows so the payload
+    // stays small and bounded no matter how large the table grows over time.
+    // Older records are still available via GET /bookings/history.
+    const cutoff = new Date(Date.now() - 45 * 24 * 60 * 60 * 1000);
+
     const bookings = await prisma.booking.findMany({
-      include: { user: true, slot: true },
+      where: { createdAt: { gte: cutoff } },
+      include: {
+        user: { select: { name: true, email: true, cardId: true, allowedCategory: true } },
+        slot: { select: { date: true, time: true } },
+      },
       orderBy: { createdAt: "desc" },
+      take: 500,
+    });
+
+    res.json({ success: true, data: bookings });
+  } catch (err) {
+    if (err?.code === "P1001") {
+      return res.status(503).json({ message: "Database connection unavailable" });
+    }
+
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// On-demand full history — not called on every dashboard load, only when
+// an admin explicitly wants older records (e.g. a "Load full history" button
+// or a reports page). Keeps the default getBookings fetch cheap.
+exports.getBookingHistory = async (req, res) => {
+  try {
+    const { from, to } = req.query;
+
+    const where = {};
+    if (from || to) {
+      where.createdAt = {};
+      if (from) where.createdAt.gte = new Date(from);
+      if (to) where.createdAt.lte = new Date(to);
+    }
+
+    const bookings = await prisma.booking.findMany({
+      where,
+      include: {
+        user: { select: { name: true, email: true, cardId: true, allowedCategory: true } },
+        slot: { select: { date: true, time: true } },
+      },
+      orderBy: { createdAt: "desc" },
+      take: 2000,
     });
 
     res.json({ success: true, data: bookings });
